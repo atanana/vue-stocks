@@ -1,17 +1,20 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <hello></hello>
+    <ProductsList
+      :products="products"
+    />
   </div>
 </template>
 
 <script>
-import Hello from './components/Hello'
+
+import ProductsList from 'components/ProductsList'
 
 export default {
   name: 'app',
+  props: ['products'],
   components: {
-    Hello
+    ProductsList
   }
 }
 </script>
