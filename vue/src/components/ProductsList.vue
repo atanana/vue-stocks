@@ -1,10 +1,12 @@
 <template>
-  <ul>
-    <ProductItem
-      v-for="product in products"
-      :product="product"
-    />
-  </ul>
+  <table class="table">
+    <tbody>
+      <ProductItem
+        v-for="product in products"
+        :product="product"
+      />
+    </tbody>
+  </table>
 </template>
 
 <script>

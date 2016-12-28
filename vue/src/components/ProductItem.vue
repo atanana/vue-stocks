@@ -1,5 +1,8 @@
 <template>
-  <li>{{product.name}}</li>
+  <tr>
+    <td>{{product.name}}</td>
+    <td>{{product.category}}</td>
+  </tr>
 </template>
 
 <script>
