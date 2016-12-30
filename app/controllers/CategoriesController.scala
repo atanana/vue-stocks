@@ -20,9 +20,7 @@ class CategoriesController @Inject()(val db: DBService) extends Controller with 
 
   def allCategories: Action[AnyContent] = Action.async {
     sortedCategories.map(categories => {
-      Ok(
-        Json.arr(categories)
-      )
+      Ok(Json.toJson(categories))
     })
   }
 }
