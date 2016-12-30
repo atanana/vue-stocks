@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <Navbar />
     <ProductsList
       :products="products"
     />
@@ -9,12 +10,14 @@
 <script>
 
 import ProductsList from 'components/ProductsList'
+import Navbar from 'components/Navbar'
 
 export default {
   name: 'app',
   props: ['products'],
   components: {
-    ProductsList
+    ProductsList,
+    Navbar
   }
 }
 </script>
