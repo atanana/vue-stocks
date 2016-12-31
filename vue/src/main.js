@@ -30,4 +30,6 @@ const app = new Vue({
   router
 }).$mount('#app');
 
-router.replace(routes[0].path);
+if (location.pathname === '/') {
+  router.replace(routes[0].path);
+}
