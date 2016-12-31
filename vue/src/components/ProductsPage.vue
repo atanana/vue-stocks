@@ -6,7 +6,6 @@
 
 <script>
 
-  import axios from 'axios'
   import ProductsList from 'components/ProductsList'
 
   export default {
@@ -14,16 +13,13 @@
     components: {
       ProductsList
     },
-    data() {
-      return {
-        products: []
+    computed: {
+      products() {
+        return this.$store.state.products;
       }
     },
     created () {
-      axios.get('/api/products/all')
-        .then((response) => {
-          this.products = response.data;
-        });
+      this.$store.commit('loadProducts');
     }
   }
 </script>

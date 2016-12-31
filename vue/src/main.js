@@ -2,10 +2,15 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import Vuex from 'vuex'
+
+import axios from 'axios'
+
 import ProductsPage from 'components/ProductsPage'
 import CategoriesPage from 'components/CategoriesPage'
 
 Vue.use(VueRouter);
+Vue.use(Vuex);
 
 const Products = {
   template: '<ProductsPage/>',
@@ -26,8 +31,30 @@ const router = new VueRouter({
   mode: 'history'
 });
 
+const store = new Vuex.Store({
+  state: {
+    products: [],
+    categories: []
+  },
+  mutations: {
+    loadProducts(state) {
+      axios.get('/api/products/all')
+        .then((response) => {
+          state.products = response.data;
+        });
+    },
+    loadCategories(state) {
+      axios.get('/api/categories/all')
+        .then((response) => {
+          state.categories = response.data;
+        });
+    }
+  }
+});
+
 const app = new Vue({
-  router
+  router,
+  store
 }).$mount('#app');
 
 if (location.pathname === '/') {
