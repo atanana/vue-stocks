@@ -15,7 +15,7 @@
 </template>
 
 <script>
-  import CategoryItem from 'components/CategoryItem'
+  import CategoryItem from 'components/categories/CategoryItem'
 
   export default {
     props: ['categories'],

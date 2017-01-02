@@ -6,7 +6,7 @@
 
 <script>
 
-  import ProductsList from 'components/ProductsList'
+  import ProductsList from 'components/products/ProductsList'
 
   export default {
     name: 'app',

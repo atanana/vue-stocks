@@ -6,8 +6,8 @@ import Vuex from 'vuex'
 
 import axios from 'axios'
 
-import ProductsPage from 'components/ProductsPage'
-import CategoriesPage from 'components/CategoriesPage'
+import ProductsPage from 'components/products/ProductsPage'
+import CategoriesPage from 'components/categories/CategoriesPage'
 
 Vue.use(VueRouter);
 Vue.use(Vuex);

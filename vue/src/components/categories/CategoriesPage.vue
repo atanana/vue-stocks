@@ -1,0 +1,35 @@
+<template>
+  <div>
+    <CategoriesList
+      :categories="categories"
+    />
+    <SaveButton @save="save"/>
+  </div>
+</template>
+
+<script>
+  import axios from 'axios'
+  import CategoriesList from 'components/categories/CategoriesList'
+  import SaveButton from 'components/SaveButton'
+
+  export default {
+    name: 'app',
+    components: {
+      CategoriesList,
+      SaveButton
+    },
+    computed: {
+      categories() {
+        return this.$store.state.categories;
+      }
+    },
+    created() {
+      this.$store.commit('loadCategories');
+    },
+    methods: {
+      save() {
+        this.categories.forEach(category => console.log(category.name))
+      }
+    }
+  }
+</script>
