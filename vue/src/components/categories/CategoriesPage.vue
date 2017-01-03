@@ -28,7 +28,7 @@
     },
     methods: {
       save() {
-        this.categories.forEach(category => console.log(category.name))
+        this.$store.dispatch('updateCategories', this.categories);
       }
     }
   }

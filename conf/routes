@@ -3,11 +3,13 @@
 # ~~~~
 
 # Home page
-GET        /                          controllers.Application.index
+GET        /                             controllers.Application.index
 
 # Map static resources from the /public folder to the /assets URL path
-GET        /assets/*file              controllers.Assets.at(path="/public", file)
+GET        /assets/*file                 controllers.Assets.at(path="/public", file)
 
-GET        /api/products/all          controllers.ProductsController.allProducts
+GET        /api/products/all             controllers.ProductsController.allProducts
 
-GET        /api/categories/all        controllers.CategoriesController.allCategories
+GET        /api/categories/all           controllers.CategoriesController.allCategories
+
+PUT        /api/categories/update        controllers.CategoriesController.updateCategories

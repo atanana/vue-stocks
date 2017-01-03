@@ -47,13 +47,19 @@ const store = new Vuex.Store({
   actions: {
     loadProducts({commit}) {
       axios.get('/api/products/all')
-        .then((response) => {
+        .then(response => {
           commit('setProducts', response.data);
         });
     },
     loadCategories({commit}) {
       axios.get('/api/categories/all')
-        .then((response) => {
+        .then(response => {
+          commit('setCategories', response.data);
+        });
+    },
+    updateCategories({commit}, categories) {
+      axios.put('/api/categories/update', categories)
+        .then(response => {
           commit('setCategories', response.data);
         });
     }
