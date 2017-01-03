@@ -24,4 +24,8 @@ trait Tables {
   def sortedCategories: Future[Seq[Category]] = {
     db.runAsync(categories.sortBy(_.name.asc).result)
   }
+
+  def updateCategoryName(id: Int, name: String): Future[Int] = {
+    db.runAsync(categories.filter(_.id === id).map(_.name).update(name))
+  }
 }
