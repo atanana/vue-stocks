@@ -19,7 +19,7 @@
       }
     },
     created () {
-      this.$store.commit('loadProducts');
+      this.$store.dispatch('loadProducts');
     }
   }
 </script>

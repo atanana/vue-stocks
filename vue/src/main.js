@@ -37,16 +37,24 @@ const store = new Vuex.Store({
     categories: []
   },
   mutations: {
-    loadProducts(state) {
+    setProducts(state, products) {
+      state.products = products;
+    },
+    setCategories(state, categories) {
+      state.categories = categories;
+    }
+  },
+  actions: {
+    loadProducts({commit}) {
       axios.get('/api/products/all')
         .then((response) => {
-          state.products = response.data;
+          commit('setProducts', response.data);
         });
     },
-    loadCategories(state) {
+    loadCategories({commit}) {
       axios.get('/api/categories/all')
         .then((response) => {
-          state.categories = response.data;
+          commit('setCategories', response.data);
         });
     }
   }

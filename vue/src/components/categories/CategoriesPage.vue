@@ -24,7 +24,7 @@
       }
     },
     created() {
-      this.$store.commit('loadCategories');
+      this.$store.dispatch('loadCategories');
     },
     methods: {
       save() {
