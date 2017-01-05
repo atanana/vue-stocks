@@ -1,17 +1,16 @@
 <template>
-  <table class="table">
-    <thead>
-    <tr>
-      <th>Имя</th>
-    </tr>
-    </thead>
-    <tbody>
+  <div>
     <CategoryItem
       v-for="category in categories"
       :category="category"
+      class="category-item"
     />
-    </tbody>
-  </table>
+
+    <button type="button" class="btn btn-default new-category-button" @click="addNewCategory">
+      <span class="glyphicon glyphicon-plus"></span>
+      Добавить категорию
+    </button>
+  </div>
 </template>
 
 <script>
@@ -21,6 +20,21 @@
     props: ['categories'],
     components: {
       CategoryItem
+    },
+    methods: {
+      addNewCategory() {
+        this.categories.push({});
+      }
     }
   }
 </script>
+
+<style>
+  .category-item {
+    margin-bottom: 1em;
+  }
+
+  .new-category-button {
+    margin-bottom: 1em;
+  }
+</style>

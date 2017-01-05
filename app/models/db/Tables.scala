@@ -28,4 +28,8 @@ trait Tables {
   def updateCategoryName(id: Int, name: String): Future[Int] = {
     db.runAsync(categories.filter(_.id === id).map(_.name).update(name))
   }
+
+  def addCategory(name: String): Future[Int] = {
+    db.runAsync(categories += Category(0, name))
+  }
 }

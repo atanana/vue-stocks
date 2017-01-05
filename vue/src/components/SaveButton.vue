@@ -1,5 +1,8 @@
 <template>
-  <button type="button" class="btn btn-primary" @click="emitSave">Сохранить</button>
+  <button type="button" class="btn btn-primary" @click="emitSave">
+    <span class="glyphicon glyphicon-floppy-disk"></span>
+    Сохранить
+  </button>
 </template>
 
 <script>
