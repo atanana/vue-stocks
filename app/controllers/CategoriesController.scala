@@ -2,7 +2,7 @@ package controllers
 
 import javax.inject.Inject
 
-import models.db.{Category, Tables}
+import models.db.{Categories, Category, Tables}
 import play.api.Logger
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{Json, Writes, _}
@@ -14,6 +14,7 @@ import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
 
 class CategoriesController @Inject()(val db: DBService) extends Controller with Tables {
+  private implicit val table = categories
 
   case class ClientCategory(id: Option[Int], name: String)
 
@@ -32,7 +33,7 @@ class CategoriesController @Inject()(val db: DBService) extends Controller with 
   }
 
   private def allSorted = {
-    sortedCategories.map(categories => {
+    sorted[Categories, Category].map(categories => {
       Ok(Json.toJson(categories))
     })
   }
@@ -46,7 +47,7 @@ class CategoriesController @Inject()(val db: DBService) extends Controller with 
       case Success(newCategories) =>
         val newCategoriesIds = newCategories.map(_.id).filter(_.isDefined).map(_.get)
         Future.sequence(
-          deleteCategoriesBesides(newCategoriesIds) +: updateAndCreateCategories(newCategories)
+          deleteBesides(newCategoriesIds) +: updateAndCreateCategories(newCategories)
         ).flatMap(_ => allSorted)
       case Failure(exception) =>
         Logger.error(s"Cannot parse request: ${request.body}", exception)
@@ -56,7 +57,7 @@ class CategoriesController @Inject()(val db: DBService) extends Controller with 
 
   private def updateAndCreateCategories(newCategories: Seq[ClientCategory]) = {
     newCategories.map(category => category.id
-      .map(id => updateCategoryName(id, category.name))
+      .map(id => updateName(id, category.name))
       .getOrElse(addCategory(category.name)))
   }
 }

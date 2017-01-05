@@ -8,7 +8,17 @@ import scala.concurrent.Future
 
 case class Category(id: Int, name: String)
 
-class Categories(tag: Tag) extends Table[Category](tag, "categories") {
+case class Pack(id: Int, name: String)
+
+trait WithNameColumn {
+  def name: Rep[String]
+}
+
+trait WithIdColumn {
+  def id: Rep[Int]
+}
+
+class Categories(tag: Tag) extends Table[Category](tag, "categories") with WithNameColumn with WithIdColumn {
   def id: Rep[Int] = column[Int]("id", O.PrimaryKey, O.AutoInc)
 
   def name: Rep[String] = column[String]("name")
@@ -16,24 +26,37 @@ class Categories(tag: Tag) extends Table[Category](tag, "categories") {
   def * : ProvenShape[Category] = (id, name) <> (Category.tupled, Category.unapply)
 }
 
+class Packs(tag: Tag) extends Table[Pack](tag, "packs") with WithNameColumn with WithIdColumn {
+  def id: Rep[Int] = column[Int]("id", O.PrimaryKey, O.AutoInc)
+
+  def name: Rep[String] = column[String]("name")
+
+  def * : ProvenShape[Pack] = (id, name) <> (Pack.tupled, Pack.unapply)
+}
+
 trait Tables {
   val db: DBService
 
   val categories: TableQuery[Categories] = TableQuery[Categories]
+  val packs: TableQuery[Packs] = TableQuery[Packs]
 
-  def sortedCategories: Future[Seq[Category]] = {
-    db.runAsync(categories.sortBy(_.name.asc).result)
+  protected def sorted[T <: Table[_] with WithNameColumn, R]()(implicit query: TableQuery[T]): Future[Seq[R]] = {
+    db.runAsync(query.sortBy(_.name.asc).result).asInstanceOf[Future[Seq[R]]]
   }
 
-  def updateCategoryName(id: Int, name: String): Future[Int] = {
-    db.runAsync(categories.filter(_.id === id).map(_.name).update(name))
+  protected def updateName[T <: Table[_] with WithNameColumn with WithIdColumn](id: Int, name: String)(implicit query: TableQuery[T]): Future[Int] = {
+    db.runAsync(query.filter(_.id === id).map(_.name).update(name))
   }
 
   def addCategory(name: String): Future[Int] = {
     db.runAsync(categories += Category(0, name))
   }
 
-  def deleteCategoriesBesides(ids: Seq[Int]): Future[Int] = {
-    db.runAsync(categories.filterNot(_.id.inSet(ids)).delete)
+  def addPack(name: String): Future[Int] = {
+    db.runAsync(packs += Pack(0, name))
+  }
+
+  protected def deleteBesides[T <: Table[_] with WithIdColumn](ids: Seq[Int])(implicit query: TableQuery[T]): Future[Int] = {
+    db.runAsync(query.filterNot(_.id.inSet(ids)).delete)
   }
 }
