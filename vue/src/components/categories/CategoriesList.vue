@@ -25,6 +25,11 @@
     methods: {
       addNewCategory() {
         this.categories.push({});
+
+        this.$nextTick(() => {
+          const inputs = document.querySelectorAll('.category-item input');
+          inputs[inputs.length - 1].focus();
+        });
       },
       deleteCategory(category) {
         this.categories.splice(this.categories.indexOf(category), 1);
