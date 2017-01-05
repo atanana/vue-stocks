@@ -10,7 +10,7 @@
 <script>
   import axios from 'axios'
   import CategoriesList from 'components/categories/CategoriesList'
-  import SaveButton from 'components/SaveButton'
+  import SaveButton from 'components/buttons/SaveButton'
 
   export default {
     name: 'app',

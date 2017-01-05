@@ -4,6 +4,7 @@
       v-for="category in categories"
       :category="category"
       class="category-item"
+      @deleteCategory="deleteCategory(category)"
     />
 
     <button type="button" class="btn btn-default new-category-button" @click="addNewCategory">
@@ -24,6 +25,9 @@
     methods: {
       addNewCategory() {
         this.categories.push({});
+      },
+      deleteCategory(category) {
+        this.categories.splice(this.categories.indexOf(category), 1);
       }
     }
   }

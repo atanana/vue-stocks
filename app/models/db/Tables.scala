@@ -32,4 +32,8 @@ trait Tables {
   def addCategory(name: String): Future[Int] = {
     db.runAsync(categories += Category(0, name))
   }
+
+  def deleteCategoriesBesides(ids: Seq[Int]): Future[Int] = {
+    db.runAsync(categories.filterNot(_.id.inSet(ids)).delete)
+  }
 }

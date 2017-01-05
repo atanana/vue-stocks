@@ -44,14 +44,19 @@ class CategoriesController @Inject()(val db: DBService) extends Controller with 
         .map(_.as[ClientCategory])
     ) match {
       case Success(newCategories) =>
+        val newCategoriesIds = newCategories.map(_.id).filter(_.isDefined).map(_.get)
         Future.sequence(
-          newCategories.map(category => category.id
-            .map(id => updateCategoryName(id, category.name))
-            .getOrElse(addCategory(category.name)))
+          deleteCategoriesBesides(newCategoriesIds) +: updateAndCreateCategories(newCategories)
         ).flatMap(_ => allSorted)
       case Failure(exception) =>
         Logger.error(s"Cannot parse request: ${request.body}", exception)
         Future(BadRequest)
     }
+  }
+
+  private def updateAndCreateCategories(newCategories: Seq[ClientCategory]) = {
+    newCategories.map(category => category.id
+      .map(id => updateCategoryName(id, category.name))
+      .getOrElse(addCategory(category.name)))
   }
 }
