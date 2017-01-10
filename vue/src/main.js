@@ -38,7 +38,8 @@ const router = new VueRouter({
 const store = new Vuex.Store({
   state: {
     products: [],
-    categories: []
+    categories: [],
+    packs: []
   },
   mutations: {
     setProducts(state, products) {
@@ -46,7 +47,10 @@ const store = new Vuex.Store({
     },
     setCategories(state, categories) {
       state.categories = categories;
-    }
+    },
+    setPacks(state, categories) {
+      state.packs = categories;
+    },
   },
   actions: {
     loadProducts({commit}) {
@@ -61,10 +65,22 @@ const store = new Vuex.Store({
           commit('setCategories', response.data);
         });
     },
+    loadPacks({commit}) {
+      axios.get('/api/packs/all')
+        .then(response => {
+          commit('setPacks', response.data);
+        });
+    },
     updateCategories({commit}, categories) {
       axios.put('/api/categories/update', categories)
         .then(response => {
           commit('setCategories', response.data);
+        });
+    },
+    updatePacks({commit}, packs) {
+      axios.put('/api/packs/update', packs)
+        .then(response => {
+          commit('setPacks', response.data);
         });
     }
   }

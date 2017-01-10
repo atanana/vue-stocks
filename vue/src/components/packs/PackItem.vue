@@ -1,7 +1,7 @@
 <template>
-  <div class="category-item">
-    <input type="text" class="form-control" placeholder="Название категории" v-model="category.name">
-    <DeleteButton class="delete-button" @delete="$emit('deleteCategory')"/>
+  <div class="pack-item">
+    <input type="text" class="form-control" placeholder="Название упаковки" v-model="pack.name">
+    <DeleteButton class="delete-button" @delete="$emit('deletePack')"/>
   </div>
 </template>
 
@@ -9,7 +9,7 @@
   import DeleteButton from 'components/buttons/DeleteButton'
 
   export default {
-    props: ['category'],
+    props: ['pack'],
     components: {
       DeleteButton
     }
@@ -21,7 +21,7 @@
     margin-left: 1em;
   }
 
-  .category-item {
+  .pack-item {
     display: flex;
   }
 </style>

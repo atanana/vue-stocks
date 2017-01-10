@@ -1,49 +1,49 @@
 <template>
   <div>
-    <CategoryItem
-      v-for="category in categories"
-      :category="category"
-      class="category-item"
-      @deleteCategory="deleteCategory(category)"
+    <PackItem
+      v-for="pack in packs"
+      :pack="pack"
+      class="pack-item"
+      @deletePack="deletePack(pack)"
     />
 
-    <button type="button" class="btn btn-default new-category-button" @click="addNewCategory">
+    <button type="button" class="btn btn-default new-pack-button" @click="addNewPack">
       <span class="glyphicon glyphicon-plus"></span>
-      Добавить категорию
+      Добавить упаковку
     </button>
   </div>
 </template>
 
 <script>
-  import CategoryItem from 'components/categories/CategoryItem'
+  import PackItem from 'components/packs/PackItem'
 
   export default {
-    props: ['categories'],
+    props: ['packs'],
     components: {
-      CategoryItem
+      PackItem
     },
     methods: {
-      addNewCategory() {
-        this.categories.push({});
+      addNewPack() {
+        this.packs.push({});
 
         this.$nextTick(() => {
-          const inputs = document.querySelectorAll('.category-item input');
+          const inputs = document.querySelectorAll('.pack-item input');
           inputs[inputs.length - 1].focus();
         });
       },
-      deleteCategory(category) {
-        this.categories.splice(this.categories.indexOf(category), 1);
+      deletePack(packs) {
+        this.packs.splice(this.packs.indexOf(packs), 1);
       }
     }
   }
 </script>
 
 <style>
-  .category-item {
+  .pack-item {
     margin-bottom: 1em;
   }
 
-  .new-category-button {
+  .new-pack-button {
     margin-bottom: 1em;
   }
 </style>

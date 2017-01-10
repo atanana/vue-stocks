@@ -56,9 +56,9 @@ class PacksController @Inject()(val db: DBService) extends Controller with Table
     }
   }
 
-  private def updateAndCreatePacks(newCategories: Seq[ClientPack]) = {
-    newCategories.map(category => category.id
-      .map(id => updateName(id, category.name))
-      .getOrElse(addCategory(category.name)))
+  private def updateAndCreatePacks(newPacks: Seq[ClientPack]) = {
+    newPacks.map(pack => pack.id
+      .map(id => updateName(id, pack.name))
+      .getOrElse(addPack(pack.name)))
   }
 }

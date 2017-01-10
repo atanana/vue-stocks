@@ -1,34 +1,33 @@
 <template>
   <div>
-    <CategoriesList
-      :categories="categories"
+    <PacksList
+      :packs="packs"
     />
     <SaveButton @save="save"/>
   </div>
 </template>
 
 <script>
-  import axios from 'axios'
-  import CategoriesList from 'components/categories/CategoriesList'
+  import PacksList from 'components/packs/PacksList'
   import SaveButton from 'components/buttons/SaveButton'
 
   export default {
     name: 'app',
     components: {
-      CategoriesList,
+      PacksList,
       SaveButton
     },
     computed: {
-      categories() {
-        return this.$store.state.categories;
+      packs() {
+        return this.$store.state.packs;
       }
     },
     created() {
-      this.$store.dispatch('loadCategories');
+      this.$store.dispatch('loadPacks');
     },
     methods: {
       save() {
-        this.$store.dispatch('updateCategories', this.categories);
+        this.$store.dispatch('updatePacks', this.packs);
       }
     }
   }
