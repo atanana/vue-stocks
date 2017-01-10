@@ -11,5 +11,7 @@ GET        /assets/*file                 controllers.Assets.at(path="/public", f
 GET        /api/products/all             controllers.ProductsController.allProducts
 
 GET        /api/categories/all           controllers.CategoriesController.allCategories
-
 PUT        /api/categories/update        controllers.CategoriesController.updateCategories
+
+GET        /api/packs/all                controllers.PacksController.allPacks
+PUT        /api/packs/update             controllers.PacksController.updatePacks

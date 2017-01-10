@@ -1,13 +1,12 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Vuex from 'vuex'
-
-import axios from 'axios'
-
-import ProductsPage from 'components/products/ProductsPage'
-import CategoriesPage from 'components/categories/CategoriesPage'
+import Vue from "vue";
+import VueRouter from "vue-router";
+import Vuex from "vuex";
+import axios from "axios";
+import ProductsPage from "components/products/ProductsPage";
+import CategoriesPage from "components/categories/CategoriesPage";
+import PacksPage from "components/packs/PacksPage";
 
 Vue.use(VueRouter);
 Vue.use(Vuex);
@@ -20,10 +19,15 @@ const Categories = {
   template: '<CategoriesPage/>',
   components: {CategoriesPage}
 };
+const Packs = {
+  template: '<PacksPage/>',
+  components: {PacksPage}
+};
 
 const routes = [
   {path: '/products', component: Products},
-  {path: '/categories', component: Categories}
+  {path: '/categories', component: Categories},
+  {path: '/packs', component: Packs},
 ];
 
 const router = new VueRouter({
