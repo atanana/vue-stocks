@@ -1,10 +1,11 @@
 <template>
   <div>
-    <PackItem
+    <SimpleItem
       v-for="pack in packs"
-      :pack="pack"
+      :item="pack"
+      placeholder="Название упаковки"
       class="pack-item"
-      @deletePack="deletePack(pack)"
+      @deleteItem="deletePack(pack)"
     />
 
     <button type="button" class="btn btn-default new-pack-button" @click="addNewPack">
@@ -15,12 +16,12 @@
 </template>
 
 <script>
-  import PackItem from 'components/packs/PackItem'
+  import SimpleItem from 'components/SimpleItem'
 
   export default {
     props: ['packs'],
     components: {
-      PackItem
+      SimpleItem
     },
     methods: {
       addNewPack() {

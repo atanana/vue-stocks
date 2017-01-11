@@ -1,10 +1,11 @@
 <template>
   <div>
-    <CategoryItem
+    <SimpleItem
       v-for="category in categories"
-      :category="category"
+      :item="category"
+      placeholder="Название категории"
       class="category-item"
-      @deleteCategory="deleteCategory(category)"
+      @deleteItem="deleteCategory(category)"
     />
 
     <button type="button" class="btn btn-default new-category-button" @click="addNewCategory">
@@ -15,12 +16,12 @@
 </template>
 
 <script>
-  import CategoryItem from 'components/categories/CategoryItem'
+  import SimpleItem from 'components/SimpleItem'
 
   export default {
     props: ['categories'],
     components: {
-      CategoryItem
+      SimpleItem
     },
     methods: {
       addNewCategory() {
