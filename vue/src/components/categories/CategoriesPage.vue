@@ -1,21 +1,22 @@
 <template>
   <div>
-    <CategoriesList
-      :categories="categories"
+    <SimpleList
+      :items="categories"
+      newItemPlaceholder="Название категории"
+      newItemLabel="Добавить категорию"
     />
     <SaveButton @save="save"/>
   </div>
 </template>
 
 <script>
-  import axios from 'axios'
-  import CategoriesList from 'components/categories/CategoriesList'
+  import SimpleList from 'components/SimpleList'
   import SaveButton from 'components/buttons/SaveButton'
 
   export default {
     name: 'app',
     components: {
-      CategoriesList,
+      SimpleList,
       SaveButton
     },
     computed: {

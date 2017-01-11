@@ -1,20 +1,22 @@
 <template>
   <div>
-    <PacksList
-      :packs="packs"
+    <SimpleList
+      :items="packs"
+      newItemPlaceholder="Название упаковки"
+      newItemLabel="Добавить упаковку"
     />
     <SaveButton @save="save"/>
   </div>
 </template>
 
 <script>
-  import PacksList from 'components/packs/PacksList'
+  import SimpleList from 'components/SimpleList'
   import SaveButton from 'components/buttons/SaveButton'
 
   export default {
     name: 'app',
     components: {
-      PacksList,
+      SimpleList,
       SaveButton
     },
     computed: {
