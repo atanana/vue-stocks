@@ -46,7 +46,7 @@ class PacksController @Inject()(val db: DBService) extends Controller with Table
         .map(_.as[ClientPack])
     ) match {
       case Success(newPacks) =>
-        val newPacksIds = newPacks.map(_.id).filter(_.isDefined).map(_.get)
+        val newPacksIds = newPacks.map(_.id).flatMap(_.toList)
         Future.sequence(
           deleteBesides(newPacksIds) +: updateAndCreatePacks(newPacks)
         ).flatMap(_ => allSorted)

@@ -5,8 +5,7 @@ import VueRouter from "vue-router";
 import Vuex from "vuex";
 import axios from "axios";
 import ProductsPage from "components/products/ProductsPage";
-import CategoriesPage from "components/categories/CategoriesPage";
-import PacksPage from "components/packs/PacksPage";
+import SimplePage from "components/SimplePage";
 
 Vue.use(VueRouter);
 Vue.use(Vuex);
@@ -15,13 +14,48 @@ const Products = {
   template: '<ProductsPage/>',
   components: {ProductsPage}
 };
+
 const Categories = {
-  template: '<CategoriesPage/>',
-  components: {CategoriesPage}
+  template: `<SimplePage
+                :items="categories"
+                @saveItems="save"
+                newItemPlaceholder="Название категории"
+                newItemLabel="Добавить категорию"/>`,
+  components: {SimplePage},
+  computed: {
+    categories() {
+      return this.$store.state.categories;
+    }
+  },
+  created() {
+    this.$store.dispatch('loadCategories');
+  },
+  methods: {
+    save() {
+      this.$store.dispatch('updateCategories', this.categories);
+    }
+  }
 };
 const Packs = {
-  template: '<PacksPage/>',
-  components: {PacksPage}
+  template: `<SimplePage
+                :items="packs"
+                @saveItems="save"
+                newItemPlaceholder="Название упаковки"
+                newItemLabel="Добавить упаковку"/>`,
+  components: {SimplePage},
+  computed: {
+    packs() {
+      return this.$store.state.packs;
+    }
+  },
+  created() {
+    this.$store.dispatch('loadPacks');
+  },
+  methods: {
+    save() {
+      this.$store.dispatch('updatePacks', this.packs);
+    }
+  }
 };
 
 const routes = [

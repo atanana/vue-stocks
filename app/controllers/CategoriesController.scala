@@ -45,7 +45,7 @@ class CategoriesController @Inject()(val db: DBService) extends Controller with 
         .map(_.as[ClientCategory])
     ) match {
       case Success(newCategories) =>
-        val newCategoriesIds = newCategories.map(_.id).filter(_.isDefined).map(_.get)
+        val newCategoriesIds = newCategories.map(_.id).flatMap(_.toList)
         Future.sequence(
           deleteBesides(newCategoriesIds) +: updateAndCreateCategories(newCategories)
         ).flatMap(_ => allSorted)
