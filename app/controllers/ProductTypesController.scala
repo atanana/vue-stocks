@@ -10,20 +10,20 @@ import slick.lifted.TableQuery
 
 import scala.concurrent.Future
 
-case class ClientPack(id: Option[Int], name: String) extends SimpleItem
+case class ClientProductType(id: Option[Int], name: String) extends SimpleItem
 
-class PacksController @Inject()(val db: DBService) extends SimpleItemsHelper[ClientProductType, Pack, Packs] {
-  override protected implicit val table: TableQuery[Packs] = packs
+class ProductTypesController @Inject()(val db: DBService) extends SimpleItemsHelper[ClientProductType, ProductType, ProductTypes] {
+  override protected implicit val table: TableQuery[ProductTypes] = productTypes
 
-  protected override def create(name: String): Future[Int] = addPack(name)
+  protected override def create(name: String): Future[Int] = addProductType(name)
 
   protected implicit val itemReads: Reads[ClientProductType] = (
     (JsPath \ "id").readNullable[Int] and
       (JsPath \ "name").read[String]
     ) (ClientProductType.apply _)
 
-  override protected implicit val itemWrites: Writes[Pack] = (
+  override protected implicit val itemWrites: Writes[ProductType] = (
     (JsPath \ "id").write[Int] and
       (JsPath \ "name").write[String]
-    ) (unlift(Pack.unapply))
+    ) (unlift(ProductType.unapply))
 }

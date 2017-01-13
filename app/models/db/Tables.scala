@@ -10,6 +10,8 @@ case class Category(id: Int, name: String)
 
 case class Pack(id: Int, name: String)
 
+case class ProductType(id: Int, name: String)
+
 trait WithNameColumn {
   def name: Rep[String]
 }
@@ -34,11 +36,20 @@ class Packs(tag: Tag) extends Table[Pack](tag, "packs") with WithNameColumn with
   def * : ProvenShape[Pack] = (id, name) <> (Pack.tupled, Pack.unapply)
 }
 
+class ProductTypes(tag: Tag) extends Table[ProductType](tag, "product_types") with WithNameColumn with WithIdColumn {
+  def id: Rep[Int] = column[Int]("id", O.PrimaryKey, O.AutoInc)
+
+  def name: Rep[String] = column[String]("name")
+
+  def * : ProvenShape[ProductType] = (id, name) <> (ProductType.tupled, ProductType.unapply)
+}
+
 trait Tables {
   val db: DBService
 
   val categories: TableQuery[Categories] = TableQuery[Categories]
   val packs: TableQuery[Packs] = TableQuery[Packs]
+  val productTypes: TableQuery[ProductTypes] = TableQuery[ProductTypes]
 
   protected def sorted[I, T <: Table[I] with WithNameColumn]()(implicit query: TableQuery[T]): Future[Seq[T#TableElementType]] = {
     db.runAsync(query.sortBy(_.name.asc).result)
@@ -54,6 +65,10 @@ trait Tables {
 
   def addPack(name: String): Future[Int] = {
     db.runAsync(packs += Pack(0, name))
+  }
+
+  def addProductType(name: String): Future[Int] = {
+    db.runAsync(productTypes += ProductType(0, name))
   }
 
   protected def deleteBesides[T <: Table[_] with WithIdColumn](ids: Seq[Int])(implicit query: TableQuery[T]): Future[Int] = {
