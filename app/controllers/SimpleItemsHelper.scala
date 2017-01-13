@@ -1,8 +1,8 @@
 package controllers
 
-import models.db.{Tables, WithIdColumn, WithNameColumn}
+import models.db._
 import play.api.Logger
-import play.api.libs.json.{JsArray, JsValue, Reads}
+import play.api.libs.json._
 import play.api.mvc._
 import slick.driver.MySQLDriver.api.Table
 import slick.lifted.TableQuery
@@ -11,30 +11,37 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
 
+//todo use always simple item instead of custom client items?
 trait SimpleItem {
   val id: Option[Int]
   val name: String
 }
 
-abstract class SimpleItemsHelper[C <: SimpleItem, I, T <: Table[I] with WithNameColumn with WithIdColumn] extends Controller with Tables {
-  protected implicit val table: TableQuery[T]
+abstract class SimpleItemsHelper[ClientItemType <: SimpleItem, ItemType, TableType <: Table[ItemType] with WithNameColumn with WithIdColumn] extends Controller with Tables {
+  protected implicit val table: TableQuery[TableType]
 
   protected def create(name: String): Future[Int]
 
-  protected def sortedItems(): Future[Result]
+  protected implicit val itemReads: Reads[ClientItemType]
 
-  protected implicit val itemReads: Reads[C]
+  protected implicit val itemWrites: Writes[ItemType]
 
-  protected def updateAndCreateItems(newItems: Seq[C]): Seq[Future[Int]] = {
+  private def updateAndCreateItems(newItems: Seq[ClientItemType]): Seq[Future[Int]] = {
     newItems.map(item => item.id
       .map(id => updateName(id, item.name))
       .getOrElse(create(item.name)))
   }
 
+  private def sortedItems(): Future[Result] = {
+    sorted[ItemType, TableType].map(items => {
+      Ok(Json.toJson(items))
+    })
+  }
+
   def updateItems(): Action[JsValue] = Action.async(parse.json) { request =>
     Try(
       request.body.as[JsArray].value
-        .map(_.as[C])
+        .map(_.as[ClientItemType])
     ) match {
       case Success(newPacks) =>
         val newItemsIds = newPacks.map(_.id).flatMap(_.toList)
