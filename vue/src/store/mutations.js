@@ -10,3 +10,6 @@ export const setPacks = (state, packs) => {
   state.packs = packs;
 };
 
+export const setProductTypes = (state, productTypes) => {
+  state.productTypes = productTypes;
+};

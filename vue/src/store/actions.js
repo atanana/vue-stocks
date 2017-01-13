@@ -21,6 +21,13 @@ export const loadPacks = ({commit}) => {
     });
 };
 
+export const loadProductTypes = ({commit}) => {
+  axios.get('/api/product-types/all')
+    .then(response => {
+      commit('setProductTypes', response.data);
+    });
+};
+
 export const updateCategories = ({commit}, categories) => {
   axios.put('/api/categories/update', categories)
     .then(response => {
@@ -32,5 +39,12 @@ export const updatePacks = ({commit}, packs) => {
   axios.put('/api/packs/update', packs)
     .then(response => {
       commit('setPacks', response.data);
+    });
+};
+
+export const updateProductTypes = ({commit}, productTypes) => {
+  axios.put('/api/product-types/update', productTypes)
+    .then(response => {
+      commit('setProductTypes', response.data);
     });
 };

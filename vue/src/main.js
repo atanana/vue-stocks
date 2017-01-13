@@ -56,11 +56,33 @@ const Packs = {
     }
   }
 };
+const ProductTypes = {
+  template: `<SimplePage
+                :items="productTypes"
+                @saveItems="save"
+                newItemPlaceholder="Название типа продуктов"
+                newItemLabel="Добавить тип продуктов"/>`,
+  components: {SimplePage},
+  computed: {
+    productTypes() {
+      return this.$store.state.productTypes;
+    }
+  },
+  created() {
+    this.$store.dispatch('loadProductTypes');
+  },
+  methods: {
+    save() {
+      this.$store.dispatch('updateProductTypes', this.productTypes);
+    }
+  }
+};
 
 const routes = [
   {path: '/products', component: Products},
   {path: '/categories', component: Categories},
   {path: '/packs', component: Packs},
+  {path: '/product-types', component: ProductTypes},
 ];
 
 const router = new VueRouter({
