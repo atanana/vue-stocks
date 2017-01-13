@@ -14,7 +14,7 @@ import scala.concurrent.Future
 
 case class ClientCategory(id: Option[Int], name: String) extends SimpleItem
 
-class CategoriesController @Inject()(val db: DBService) extends SimpleItemsHelper[ClientCategory, Categories] {
+class CategoriesController @Inject()(val db: DBService) extends SimpleItemsHelper[ClientCategory, Category, Categories] {
   implicit val categoryWrites: Writes[Category] = (
     (JsPath \ "id").write[Int] and
       (JsPath \ "name").write[String]
@@ -22,10 +22,8 @@ class CategoriesController @Inject()(val db: DBService) extends SimpleItemsHelpe
 
   protected override def create(name: String): Future[Int] = addCategory(name)
 
-  protected override def deleteBesidesItems(ids: Seq[Int]): Future[Int] = deleteBesidesItems(ids)
-
   protected override def sortedItems(): Future[Result] = {
-    sorted[Categories, Category].map(categories => {
+    sorted[Category, Categories].map(categories => {
       Ok(Json.toJson(categories))
     })
   }

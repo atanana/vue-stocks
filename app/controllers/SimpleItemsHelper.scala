@@ -16,12 +16,10 @@ trait SimpleItem {
   val name: String
 }
 
-abstract class SimpleItemsHelper[C <: SimpleItem, T <: Table[_] with WithNameColumn with WithIdColumn] extends Controller with Tables {
+abstract class SimpleItemsHelper[C <: SimpleItem, I, T <: Table[I] with WithNameColumn with WithIdColumn] extends Controller with Tables {
   protected implicit val table: TableQuery[T]
 
   protected def create(name: String): Future[Int]
-
-  protected def deleteBesidesItems(ids: Seq[Int]): Future[Int]
 
   protected def sortedItems(): Future[Result]
 
@@ -41,7 +39,7 @@ abstract class SimpleItemsHelper[C <: SimpleItem, T <: Table[_] with WithNameCol
       case Success(newPacks) =>
         val newItemsIds = newPacks.map(_.id).flatMap(_.toList)
         Future.sequence(
-          deleteBesidesItems(newItemsIds) +: updateAndCreateItems(newPacks)
+          deleteBesides(newItemsIds) +: updateAndCreateItems(newPacks)
         ).flatMap(_ => sortedItems())
       case Failure(exception) =>
         Logger.error(s"Cannot parse request: ${request.body}", exception)

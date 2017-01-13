@@ -40,8 +40,8 @@ trait Tables {
   val categories: TableQuery[Categories] = TableQuery[Categories]
   val packs: TableQuery[Packs] = TableQuery[Packs]
 
-  protected def sorted[T <: Table[_] with WithNameColumn, R]()(implicit query: TableQuery[T]): Future[Seq[R]] = {
-    db.runAsync(query.sortBy(_.name.asc).result).asInstanceOf[Future[Seq[R]]]
+  protected def sorted[I, T <: Table[I] with WithNameColumn]()(implicit query: TableQuery[T]): Future[Seq[T#TableElementType]] = {
+    db.runAsync(query.sortBy(_.name.asc).result)
   }
 
   protected def updateName[T <: Table[_] with WithNameColumn with WithIdColumn](id: Int, name: String)(implicit query: TableQuery[T]): Future[Int] = {
