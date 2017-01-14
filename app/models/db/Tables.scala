@@ -61,18 +61,6 @@ trait Tables {
     db.runAsync(query.filter(_.id === id).map(_.name).update(name))
   }
 
-  def addCategory(name: String): Future[Int] = {
-    db.runAsync(categories += Category(0, name))
-  }
-
-  def addPack(name: String): Future[Int] = {
-    db.runAsync(packs += Pack(0, name))
-  }
-
-  def addProductType(name: String): Future[Int] = {
-    db.runAsync(productTypes += ProductType(0, name, None))
-  }
-
   protected def deleteBesides[T <: Table[_] with WithIdColumn](ids: Seq[Int])(implicit query: TableQuery[T]): Future[Int] = {
     db.runAsync(query.filterNot(_.id.inSet(ids)).delete)
   }

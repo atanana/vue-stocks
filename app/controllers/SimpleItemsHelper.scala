@@ -20,7 +20,7 @@ trait SimpleItem {
 abstract class SimpleItemsHelper[ClientItemType <: SimpleItem, ItemType, TableType <: Table[ItemType] with WithNameColumn with WithIdColumn] extends Controller with Tables {
   protected implicit val table: TableQuery[TableType]
 
-  protected def create(name: String): Future[Int]
+  protected def createItem(item: ClientItemType): Future[Int]
 
   protected implicit val itemReads: Reads[ClientItemType]
 
@@ -28,8 +28,12 @@ abstract class SimpleItemsHelper[ClientItemType <: SimpleItem, ItemType, TableTy
 
   private def updateAndCreateItems(newItems: Seq[ClientItemType]): Seq[Future[Int]] = {
     newItems.map(item => item.id
-      .map(id => updateName(id, item.name))
-      .getOrElse(create(item.name)))
+      .map(id => updateItem(item, id))
+      .getOrElse(createItem(item)))
+  }
+
+  protected def updateItem(item: ClientItemType, id: Int): Future[Int] = {
+    updateName(id, item.name)
   }
 
   private def sortedItems(): Future[Result] = {
