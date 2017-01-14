@@ -7,11 +7,15 @@ export const loadProducts = ({commit}) => {
     });
 };
 
+let loaded = false;
 export const loadCategories = ({commit}) => {
-  axios.get('/api/categories/all')
-    .then(response => {
-      commit('setCategories', response.data);
-    });
+  if (!loaded) {
+    axios.get('/api/categories/all')
+      .then(response => {
+        commit('setCategories', response.data);
+        loaded = true;
+      });
+  }
 };
 
 export const loadPacks = ({commit}) => {
