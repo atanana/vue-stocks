@@ -24,6 +24,7 @@ class ProductTypesController @Inject()(val db: DBService) extends SimpleItemsHel
 
   override protected implicit val itemWrites: Writes[ProductType] = (
     (JsPath \ "id").write[Int] and
-      (JsPath \ "name").write[String]
+      (JsPath \ "name").write[String] and
+      (JsPath \ "categoryId").writeNullable[Int]
     ) (unlift(ProductType.unapply))
 }

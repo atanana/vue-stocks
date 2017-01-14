@@ -10,7 +10,7 @@ case class Category(id: Int, name: String)
 
 case class Pack(id: Int, name: String)
 
-case class ProductType(id: Int, name: String)
+case class ProductType(id: Int, name: String, categoryId: Option[Int])
 
 trait WithNameColumn {
   def name: Rep[String]
@@ -41,7 +41,9 @@ class ProductTypes(tag: Tag) extends Table[ProductType](tag, "product_types") wi
 
   def name: Rep[String] = column[String]("name")
 
-  def * : ProvenShape[ProductType] = (id, name) <> (ProductType.tupled, ProductType.unapply)
+  def categoryId: Rep[Option[Int]] = column[Option[Int]]("category_id")
+
+  def * : ProvenShape[ProductType] = (id, name, categoryId) <> (ProductType.tupled, ProductType.unapply)
 }
 
 trait Tables {
@@ -68,7 +70,7 @@ trait Tables {
   }
 
   def addProductType(name: String): Future[Int] = {
-    db.runAsync(productTypes += ProductType(0, name))
+    db.runAsync(productTypes += ProductType(0, name, None))
   }
 
   protected def deleteBesides[T <: Table[_] with WithIdColumn](ids: Seq[Int])(implicit query: TableQuery[T]): Future[Int] = {
