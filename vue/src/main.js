@@ -4,8 +4,8 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import ProductsPage from "components/products/ProductsPage";
 import SimplePage from "components/SimplePage";
-
-import store from 'store/store';
+import ProductTypesPage from "components/product-types/ProductTypesPage";
+import store from "store/store";
 
 Vue.use(VueRouter);
 
@@ -57,19 +57,24 @@ const Packs = {
   }
 };
 const ProductTypes = {
-  template: `<SimplePage
+  template: `<ProductTypesPage
                 :items="productTypes"
+                :categories="categories"
                 @saveItems="save"
                 newItemPlaceholder="Название типа продуктов"
                 newItemLabel="Добавить тип продуктов"/>`,
-  components: {SimplePage},
+  components: {ProductTypesPage},
   computed: {
     productTypes() {
       return this.$store.state.productTypes;
+    },
+    categories() {
+      return this.$store.state.categories;
     }
   },
   created() {
     this.$store.dispatch('loadProductTypes');
+    this.$store.dispatch('loadCategories');
   },
   methods: {
     save() {
