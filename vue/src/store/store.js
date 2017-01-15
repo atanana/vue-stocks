@@ -1,8 +1,7 @@
 import Vuex from "vuex";
 import Vue from "vue";
-
-import * as actions from 'store/actions'
-import * as mutations from 'store/mutations'
+import actions from "store/actions";
+import * as mutations from "store/mutations";
 
 Vue.use(Vuex);
 
