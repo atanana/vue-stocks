@@ -12,6 +12,8 @@ case class Pack(id: Int, name: String)
 
 case class ProductType(id: Int, name: String, categoryId: Option[Int])
 
+case class Product(id: Int, productTypeId: Int, categoryId: Int, packId: Int)
+
 trait WithNameColumn {
   def name: Rep[String]
 }
@@ -44,6 +46,18 @@ class ProductTypes(tag: Tag) extends Table[ProductType](tag, "product_types") wi
   def categoryId: Rep[Option[Int]] = column[Option[Int]]("category_id")
 
   def * : ProvenShape[ProductType] = (id, name, categoryId) <> (ProductType.tupled, ProductType.unapply)
+}
+
+class Products(tag: Tag) extends Table[Product](tag, "products") with WithIdColumn {
+  def id: Rep[Int] = column[Int]("id", O.PrimaryKey, O.AutoInc)
+
+  def productTypeId: Rep[Int] = column[Int]("product_type_id")
+
+  def categoryId: Rep[Int] = column[Int]("category_id")
+
+  def packId: Rep[Int] = column[Int]("pack_id")
+
+  def * : ProvenShape[Product] = (id, productTypeId, categoryId, packId) <> (Product.tupled, Product.unapply)
 }
 
 trait Tables {
