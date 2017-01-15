@@ -6,6 +6,7 @@ import ProductsPage from "components/products/ProductsPage";
 import SimplePage from "components/SimplePage";
 import ProductTypesPage from "components/product-types/ProductTypesPage";
 import store from "store/store";
+import {copyData} from "utility/objectUtils";
 
 Vue.use(VueRouter);
 
@@ -13,10 +14,6 @@ const Products = {
   template: '<ProductsPage/>',
   components: {ProductsPage}
 };
-
-function copyData(data) {
-  return JSON.parse(JSON.stringify(data));
-}
 
 const Categories = {
   template: `<SimplePage

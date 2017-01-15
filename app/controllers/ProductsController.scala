@@ -48,12 +48,12 @@ class ProductsController @Inject()(val db: DBService) extends Controller with Ta
     Json.obj(
       "productTypeId" -> productTypeId,
       "categoryId" -> categoryId,
-      "packs" -> Json.arr(packs.map({ case (pack, quantity) =>
+      "packs" -> packs.map({ case (pack, quantity) =>
         Json.obj(
           "packId" -> pack,
           "quantity" -> quantity
         )
-      }))
+      })
     )
   }
 }

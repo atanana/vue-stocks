@@ -1,9 +1,9 @@
 <template>
   <tr>
-    <td>{{product.name}}</td>
-    <td>{{product.category}}</td>
+    <td>{{name}}</td>
+    <td>{{category}}</td>
     <td>
-      <span class="badge" v-for="item in productItems">{{item}}</span>
+      <span class="badge" v-for="item in packs">{{item.name}} x {{item.quantity}}</span>
     </td>
   </tr>
 </template>
@@ -18,15 +18,25 @@
   export default {
     props: ['product'],
     computed: {
-      productItems() {
-        const result = [];
-        for (let item of this.product.items) {
-          for (let i = 0; i < item.quantity; i++) {
-            result.push(item.pack);
-          }
+      name() {
+        if (this.product.productType) {
+          return this.product.productType.name;
+        } else {
+          return '-';
         }
-
-        return result;
+      },
+      category() {
+        if (this.product.category) {
+          return this.product.category.name;
+        } else {
+          return '-';
+        }
+      },
+      packs() {
+        return this.product.packs.map(item => ({
+          name: item.pack ? item.pack.name : '-',
+          quantity: item.quantity
+        }));
       }
     }
   }
