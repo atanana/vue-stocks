@@ -14,6 +14,10 @@ const Products = {
   components: {ProductsPage}
 };
 
+function copyData(data) {
+  return JSON.parse(JSON.stringify(data));
+}
+
 const Categories = {
   template: `<SimplePage
                 :items="categories"
@@ -23,7 +27,7 @@ const Categories = {
   components: {SimplePage},
   computed: {
     categories() {
-      return this.$store.state.categories;
+      return copyData(this.$store.state.categories);
     }
   },
   created() {
@@ -44,7 +48,7 @@ const Packs = {
   components: {SimplePage},
   computed: {
     packs() {
-      return this.$store.state.packs;
+      return copyData(this.$store.state.packs);
     }
   },
   created() {
@@ -66,10 +70,10 @@ const ProductTypes = {
   components: {ProductTypesPage},
   computed: {
     productTypes() {
-      return this.$store.state.productTypes;
+      return copyData(this.$store.state.productTypes);
     },
     categories() {
-      return this.$store.state.categories;
+      return copyData(this.$store.state.categories);
     }
   },
   created() {
