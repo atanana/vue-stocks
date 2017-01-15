@@ -66,6 +66,7 @@ trait Tables {
   val categories: TableQuery[Categories] = TableQuery[Categories]
   val packs: TableQuery[Packs] = TableQuery[Packs]
   val productTypes: TableQuery[ProductTypes] = TableQuery[ProductTypes]
+  val products: TableQuery[Products] = TableQuery[Products]
 
   protected def sorted[I, T <: Table[I] with WithNameColumn]()(implicit query: TableQuery[T]): Future[Seq[T#TableElementType]] = {
     db.runAsync(query.sortBy(_.name.asc).result)
