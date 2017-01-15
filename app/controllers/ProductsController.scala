@@ -21,6 +21,39 @@ class ProductsController @Inject()(val db: DBService) extends Controller with Ta
 
   def allProducts: Action[AnyContent] = Action.async {
     db.runAsync(products.sortBy(_.id).result)
-      .map(products => Ok(Json.toJson(products)))
+      .map(products => {
+        val data = groupProducts(products)
+          .map((toJson _).tupled)
+        Ok(Json.toJson(data))
+      })
+  }
+
+  private def groupProducts(products: Seq[Product]) = {
+    products
+      .groupBy(product => (product.productTypeId, product.categoryId))
+      .map({ case ((productType, category), productsGroup) =>
+        groupByPacks(productType, category, productsGroup)
+      })
+  }
+
+  private def groupByPacks(productType: Int, category: Int, productsGroup: Seq[Product]) = {
+    val packs = productsGroup.groupBy(_.packId)
+      .map({ case (packId, productsPackGroup) =>
+        (packId, productsPackGroup.size)
+      })
+    (productType, category, packs)
+  }
+
+  private def toJson(productTypeId: Int, categoryId: Int, packs: Map[Int, Int]) = {
+    Json.obj(
+      "productTypeId" -> productTypeId,
+      "categoryId" -> categoryId,
+      "packs" -> Json.arr(packs.map({ case (pack, quantity) =>
+        Json.obj(
+          "packId" -> pack,
+          "quantity" -> quantity
+        )
+      }))
+    )
   }
 }
