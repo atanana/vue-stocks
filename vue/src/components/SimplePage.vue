@@ -1,23 +1,34 @@
 <template>
   <div>
     <SimpleList
-      :items="items"
+      :items="itemsData"
       :newItemPlaceholder="newItemPlaceholder"
       :newItemLabel="newItemLabel"
     />
-    <SaveButton @save="$emit('saveItems')"/>
+    <SaveButton @save="$emit('saveItems', itemsData)"/>
   </div>
 </template>
 
 <script>
   import SimpleList from 'components/SimpleList'
   import SaveButton from 'components/buttons/SaveButton'
+  import {copyData} from "utility/objectUtils";
 
   export default {
     props: ['items', 'newItemPlaceholder', 'newItemLabel'],
     components: {
       SimpleList,
       SaveButton
+    },
+    data() {
+      return {
+        itemsData: copyData(this.items)
+      }
+    },
+    watch: {
+      items(newItems) {
+        this.itemsData = copyData(newItems)
+      }
     }
   }
 </script>

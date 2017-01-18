@@ -6,7 +6,6 @@ import ProductsPage from "components/products/ProductsPage";
 import SimplePage from "components/SimplePage";
 import ProductTypesPage from "components/product-types/ProductTypesPage";
 import store from "store/store";
-import {copyData} from "utility/objectUtils";
 
 Vue.use(VueRouter);
 
@@ -24,15 +23,15 @@ const Categories = {
   components: {SimplePage},
   computed: {
     categories() {
-      return copyData(this.$store.state.categories);
+      return this.$store.state.categories;
     }
   },
   created() {
     this.$store.dispatch('loadCategories');
   },
   methods: {
-    save() {
-      this.$store.dispatch('updateCategories', this.categories);
+    save(newCategories) {
+      this.$store.dispatch('updateCategories', newCategories);
     }
   }
 };
@@ -45,15 +44,15 @@ const Packs = {
   components: {SimplePage},
   computed: {
     packs() {
-      return copyData(this.$store.state.packs);
+      return this.$store.state.packs;
     }
   },
   created() {
     this.$store.dispatch('loadPacks');
   },
   methods: {
-    save() {
-      this.$store.dispatch('updatePacks', this.packs);
+    save(newPacks) {
+      this.$store.dispatch('updatePacks', newPacks);
     }
   }
 };
@@ -67,10 +66,10 @@ const ProductTypes = {
   components: {ProductTypesPage},
   computed: {
     productTypes() {
-      return copyData(this.$store.state.productTypes);
+      return this.$store.state.productTypes;
     },
     categories() {
-      return copyData(this.$store.state.categories);
+      return this.$store.state.categories;
     }
   },
   created() {
@@ -78,8 +77,8 @@ const ProductTypes = {
     this.$store.dispatch('loadCategories');
   },
   methods: {
-    save() {
-      this.$store.dispatch('updateProductTypes', this.productTypes);
+    save(newProductTypes) {
+      this.$store.dispatch('updateProductTypes', newProductTypes);
     }
   }
 };
