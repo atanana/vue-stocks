@@ -9,20 +9,19 @@
       @deleteItem="deleteItem(item)"
     />
 
-    <button type="button" class="btn btn-default new-item-button" @click="addNewItem">
-      <span class="glyphicon glyphicon-plus"></span>
-      {{newItemLabel}}
-    </button>
+    <AddNewButton :label="newItemLabel" @addNew="addNewItem"/>
   </div>
 </template>
 
 <script>
   import ProductTypesItem from 'components/product-types/ProductTypesItem'
+  import AddNewButton from 'components/buttons/AddNewButton'
 
   export default {
     props: ['items', 'categories', 'newItemPlaceholder', 'newItemLabel'],
     components: {
-      ProductTypesItem
+      ProductTypesItem,
+      AddNewButton
     },
     methods: {
       addNewItem() {
@@ -42,10 +41,6 @@
 
 <style>
   .simple-item {
-    margin-bottom: 1em;
-  }
-
-  .new-item-button {
     margin-bottom: 1em;
   }
 </style>

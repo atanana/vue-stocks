@@ -1,16 +1,21 @@
 <template>
-  <ProductsList
-    :products="products"
-  />
+  <div>
+    <AddProductPopup v-if="showAddProductPopup" @close="showAddProductPopup = false"/>
+    <ProductsList
+      :products="products"
+    />
+  </div>
 </template>
 
 <script>
   import ProductsList from 'components/products/ProductsList';
+  import AddProductPopup from 'components/products/AddProductPopup';
   import {toMap} from 'utility/objectUtils';
 
   export default {
     components: {
-      ProductsList
+      ProductsList,
+      AddProductPopup
     },
     computed: {
       products() {
@@ -34,17 +39,16 @@
         return toMap(this.$store.state.productTypes);
       },
     },
-    created () {
+    created() {
       this.$store.dispatch('loadProducts');
       this.$store.dispatch('loadCategories');
       this.$store.dispatch('loadPacks');
       this.$store.dispatch('loadProductTypes');
+    },
+    data() {
+      return {
+        showAddProductPopup: false
+      }
     }
   }
 </script>
-
-<style>
-  #app {
-    margin: 1em;
-  }
-</style>
