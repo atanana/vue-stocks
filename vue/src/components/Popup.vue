@@ -18,9 +18,8 @@
 
           <div class="modal-footer">
             <slot name="footer">
-              default footer
-              <button class="modal-default-button" @click="$emit('close')">
-                OK
+              <button class="btn btn-primary pull-right" @click="$emit('close')">
+                {{buttonLabel}}
               </button>
             </slot>
           </div>
@@ -29,6 +28,16 @@
     </div>
   </transition>
 </template>
+
+<script>
+  export default {
+    props: {
+      buttonLabel: {
+        default: 'Ok'
+      }
+    }
+  }
+</script>
 
 <style>
   .modal-mask {
@@ -49,7 +58,7 @@
   }
 
   .modal-container {
-    width: 300px;
+    width: 50%;
     margin: 0 auto;
     padding: 20px 30px;
     background-color: #fff;
@@ -66,10 +75,6 @@
 
   .modal-body {
     margin: 20px 0;
-  }
-
-  .modal-default-button {
-    float: right;
   }
 
   .modal-enter {

@@ -13,8 +13,8 @@
 </template>
 
 <script>
-  import SimpleItem from 'components/SimpleItem'
-  import AddNewButton from 'components/buttons/AddNewButton'
+  import SimpleItem from 'components/SimpleItem';
+  import AddNewButton from 'components/buttons/AddNewButton';
 
   export default {
     props: ['items', 'newItemPlaceholder', 'newItemLabel'],

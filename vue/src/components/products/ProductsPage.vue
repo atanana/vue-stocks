@@ -1,6 +1,10 @@
 <template>
   <div>
-    <AddProductPopup v-if="showAddProductPopup" @close="showAddProductPopup = false"/>
+    <AddProductPopup
+      :categories="categories"
+      :productTypes="productTypes"
+      :packs="packs"
+    />
     <ProductsList
       :products="products"
     />
@@ -30,25 +34,29 @@
         }));
       },
       categoriesMap() {
-        return toMap(this.$store.state.categories);
+        return toMap(this.categories);
       },
       packsMap() {
-        return toMap(this.$store.state.packs);
+        return toMap(this.packs);
       },
       productTypesMap() {
-        return toMap(this.$store.state.productTypes);
+        return toMap(this.productTypes);
       },
+      categories() {
+        return this.$store.state.categories;
+      },
+      productTypes() {
+        return this.$store.state.productTypes;
+      },
+      packs() {
+        return this.$store.state.packs;
+      }
     },
     created() {
       this.$store.dispatch('loadProducts');
       this.$store.dispatch('loadCategories');
       this.$store.dispatch('loadPacks');
       this.$store.dispatch('loadProductTypes');
-    },
-    data() {
-      return {
-        showAddProductPopup: false
-      }
     }
   }
 </script>
