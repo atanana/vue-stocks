@@ -18,7 +18,7 @@
 
           <div class="modal-footer">
             <slot name="footer">
-              <button class="btn btn-primary pull-right" @click="$emit('close')">
+              <button class="btn btn-primary pull-right" @click="$emit('okPressed')">
                 {{buttonLabel}}
               </button>
             </slot>

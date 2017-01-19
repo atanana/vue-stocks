@@ -1,7 +1,7 @@
 <template>
   <div>
     <AddNewButton label="Добавить продукт" @addNew="showAddProductPopup = true"/>
-    <Popup v-if="showAddProductPopup" @close="showAddProductPopup = false" buttonLabel="Добавить">
+    <Popup v-if="showAddProductPopup" @okPressed="addProduct" buttonLabel="Добавить">
       <div slot="header">
         <h2>Добавьте продукт</h2>
       </div>
@@ -65,6 +65,16 @@
     computed: {
       availableCategories() {
         return [{name: 'Без категории'}].concat(this.categories);
+      }
+    },
+    methods: {
+      addProduct() {
+        this.showAddProductPopup = false;
+        this.$store.dispatch('addProduct', {
+          categoryId: this.categoryId,
+          productTypeId: this.productTypeId,
+          packId: this.packId
+        });
       }
     }
   }

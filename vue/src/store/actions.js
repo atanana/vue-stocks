@@ -52,5 +52,11 @@ export default {
       .then(response => {
         commit('setProductTypes', response.data);
       });
+  },
+  addProduct({commit}, newProduct) {
+    axios.post('/api/products/new', newProduct)
+      .then(response => {
+        commit('setProducts', response.data);
+      })
   }
 }
