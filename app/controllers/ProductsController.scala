@@ -3,6 +3,7 @@ package controllers
 import javax.inject.Inject
 
 import models.db.{Product, Tables}
+import play.api.Logger
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import play.api.mvc._
@@ -10,6 +11,8 @@ import services.db.DBService
 import slick.driver.MySQLDriver.api._
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+import scala.util.{Failure, Success, Try}
 
 class ProductsController @Inject()(val db: DBService) extends Controller with Tables {
   private implicit val productsWrites: Writes[Product] = (
@@ -20,6 +23,10 @@ class ProductsController @Inject()(val db: DBService) extends Controller with Ta
     ) (unlift(Product.unapply))
 
   def allProducts: Action[AnyContent] = Action.async {
+    getAllProducts
+  }
+
+  private def getAllProducts = {
     db.runAsync(products.sortBy(_.id).result)
       .map(products => {
         val data = groupProducts(products)
@@ -55,5 +62,26 @@ class ProductsController @Inject()(val db: DBService) extends Controller with Ta
         )
       })
     )
+  }
+
+  case class NewProduct(categoryId: Int, productTypeId: Int, packId: Int)
+
+  implicit val newProductReads: Reads[NewProduct] = (
+    (JsPath \ "categoryId").read[Int] and
+      (JsPath \ "productTypeId").read[Int] and
+      (JsPath \ "packId").read[Int]
+    ) (NewProduct.apply _)
+
+  def addProduct(): Action[JsValue] = Action.async(parse.json) { request =>
+    Try(request.body.as[NewProduct]) match {
+      case Success(newProduct) => insertProduct(newProduct).flatMap(_ => getAllProducts)
+      case Failure(exception) =>
+        Logger.error(s"Cannot parse request: ${request.body}", exception)
+        Future(BadRequest)
+    }
+  }
+
+  private def insertProduct(product: NewProduct) = {
+    db.runAsync(products += Product(0, product.productTypeId, product.categoryId, product.packId))
   }
 }
