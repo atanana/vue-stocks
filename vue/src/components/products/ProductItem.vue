@@ -3,13 +3,16 @@
     <td>{{name}}</td>
     <td>{{category}}</td>
     <td>
-      <span class="badge" v-for="item in packs">{{item.name}} x {{item.quantity}}</span>
+      <span class="tag is-info" v-for="item in packs">
+        {{item.name}} x {{item.quantity}}
+        <button class="delete is-small"></button>
+      </span>
     </td>
   </tr>
 </template>
 
 <style>
-  span.badge {
+  span.tag {
     margin-right: 1em;
   }
 </style>

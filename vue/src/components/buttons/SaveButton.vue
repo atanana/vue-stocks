@@ -1,7 +1,9 @@
 <template>
-  <button type="button" class="btn btn-primary" @click="emitSave">
-    <span class="glyphicon glyphicon-floppy-disk"></span>
-    Сохранить
+  <button type="button" class="button is-primary" @click="emitSave">
+    <span class="icon">
+      <i class="fa fa-floppy-o"></i>
+    </span>
+    <span>Сохранить</span>
   </button>
 </template>
 

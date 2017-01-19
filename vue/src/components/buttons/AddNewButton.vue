@@ -1,7 +1,9 @@
 <template>
-  <button type="button" class="btn btn-default new-item-button" @click="$emit('addNew')">
-    <span class="glyphicon glyphicon-plus"></span>
-    {{label}}
+  <button type="button" class="button new-item-button" @click="$emit('addNew')">
+    <span class="icon">
+      <i class="fa fa-plus"></i>
+    </span>
+    <span>{{label}}</span>
   </button>
 </template>
 

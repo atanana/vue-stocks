@@ -1,7 +1,7 @@
 <template>
   <div class="simple-item">
     <!--suppress HtmlFormInputWithoutLabel -->
-    <input type="text" class="form-control" :placeholder="placeholder" v-model="item.name">
+    <input type="text" class="input" :placeholder="placeholder" v-model="item.name">
     <DeleteButton class="delete-button" @delete="$emit('deleteItem')"/>
   </div>
 </template>

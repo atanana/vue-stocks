@@ -3,32 +3,18 @@
 <head>
   <meta charset="utf-8">
   <title>vue-stocks</title>
-  <link rel="stylesheet" href="static/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="static/bulma/bulma.css">
+  <link rel="stylesheet" href="static/font-awesome/font-awesome.min.css">
   <link rel="stylesheet" href="static/main.css">
 </head>
 <body>
 <div id="app">
-  <nav class="navbar navbar-default">
-    <div class="container-fluid">
-      <!-- Brand and toggle get grouped for better mobile display -->
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="#">Запасы</a>
-      </div>
-
-      <div class="collapse navbar-collapse" id="navbar-collapse">
-        <ul class="nav navbar-nav">
-          <router-link to="/products" tag="li" active-class="active"><a>Продукты</a></router-link>
-          <router-link to="/categories" tag="li" active-class="active"><a>Категории</a></router-link>
-          <router-link to="/packs" tag="li" active-class="active"><a>Упаковки</a></router-link>
-          <router-link to="/product-types" tag="li" active-class="active"><a>Типы продуктов</a></router-link>
-        </ul>
-      </div>
+  <nav class="nav">
+    <div class="nav-left nav-menu has-shadow">
+      <router-link to="/products" active-class="is-active" class="nav-item is-tab">Продукты</router-link>
+      <router-link to="/categories" active-class="is-active" class="nav-item is-tab">Категории</router-link>
+      <router-link to="/packs" active-class="is-active" class="nav-item is-tab">Упаковки</router-link>
+      <router-link to="/product-types" active-class="is-active" class="nav-item is-tab">Типы продуктов</router-link>
     </div>
   </nav>
 

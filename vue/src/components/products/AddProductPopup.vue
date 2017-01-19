@@ -1,14 +1,16 @@
 <template>
   <div>
     <AddNewButton label="Добавить продукт" @addNew="showAddProductPopup = true"/>
-    <Popup v-if="showAddProductPopup" @okPressed="addProduct" buttonLabel="Добавить">
+    <Popup v-if="showAddProductPopup" @okPressed="addProduct" @close="showAddProductPopup = false"
+           buttonLabel="Добавить">
       <div slot="header">
         <h2>Добавьте продукт</h2>
       </div>
 
-      <div slot="body">
-        <label>
-          Категория
+      <div slot="body" class="control">
+        <label class="label">Категория</label>
+        <span class="select">
+          <!--suppress HtmlFormInputWithoutLabel -->
           <select v-model="categoryId" class="form-control">
             <option
               v-for="category in availableCategories"
@@ -16,10 +18,11 @@
             >{{category.name}}
             </option>
           </select>
-        </label>
+        </span>
 
-        <label>
-          Тип
+        <label class="label">Тип</label>
+        <span class="select">
+          <!--suppress HtmlFormInputWithoutLabel -->
           <select v-model="productTypeId" class="form-control">
             <option
               v-for="productType in productTypes"
@@ -27,10 +30,11 @@
             >{{productType.name}}
             </option>
           </select>
-        </label>
+        </span>
 
-        <label>
-          Упаковка
+        <label class="label">Упаковка</label>
+        <span class="select">
+          <!--suppress HtmlFormInputWithoutLabel -->
           <select v-model="packId" class="form-control">
             <option
               v-for="pack in packs"
@@ -38,7 +42,7 @@
             >{{pack.name}}
             </option>
           </select>
-        </label>
+        </span>
       </div>
     </Popup>
   </div>
