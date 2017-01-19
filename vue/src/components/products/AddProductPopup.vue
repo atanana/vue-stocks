@@ -75,6 +75,10 @@
           productTypeId: this.productTypeId,
           packId: this.packId
         });
+
+        this.categoryId = null;
+        this.productTypeId = null;
+        this.packId = null;
       }
     }
   }
