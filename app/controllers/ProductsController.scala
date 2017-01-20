@@ -64,24 +64,38 @@ class ProductsController @Inject()(val db: DBService) extends Controller with Ta
     )
   }
 
-  case class NewProduct(categoryId: Int, productTypeId: Int, packId: Int)
+  case class ClientProduct(categoryId: Int, productTypeId: Int, packId: Int)
 
-  implicit val newProductReads: Reads[NewProduct] = (
+  implicit val clientProductReads: Reads[ClientProduct] = (
     (JsPath \ "categoryId").read[Int] and
       (JsPath \ "productTypeId").read[Int] and
       (JsPath \ "packId").read[Int]
-    ) (NewProduct.apply _)
+    ) (ClientProduct.apply _)
 
-  def addProduct(): Action[JsValue] = Action.async(parse.json) { request =>
-    Try(request.body.as[NewProduct]) match {
-      case Success(newProduct) => insertProduct(newProduct).flatMap(_ => getAllProducts)
+  def addProduct(): Action[JsValue] = actionOnProduct(insertProduct)
+
+  def deleteProduct(): Action[JsValue] = actionOnProduct(deleteProduct)
+
+  private def insertProduct(product: ClientProduct) = {
+    db.runAsync(products += Product(0, product.productTypeId, product.categoryId, product.packId))
+  }
+
+  private def deleteProduct(product: ClientProduct) = {
+    db.runAsync(
+      products.filter(dbProduct => dbProduct.productTypeId === product.productTypeId
+        && dbProduct.categoryId === product.categoryId
+        && dbProduct.packId === product.packId)
+        .take(1)
+        .delete
+    )
+  }
+
+  private def actionOnProduct(action: (ClientProduct) => Future[Int]): Action[JsValue] = Action.async(parse.json) { request =>
+    Try(request.body.as[ClientProduct]) match {
+      case Success(product) => action(product).flatMap(_ => getAllProducts)
       case Failure(exception) =>
         Logger.error(s"Cannot parse request: ${request.body}", exception)
         Future(BadRequest)
     }
-  }
-
-  private def insertProduct(product: NewProduct) = {
-    db.runAsync(products += Product(0, product.productTypeId, product.categoryId, product.packId))
   }
 }
