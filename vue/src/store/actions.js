@@ -58,5 +58,11 @@ export default {
       .then(response => {
         commit('setProducts', response.data);
       })
+  },
+  deleteProduct({commit}, product) {
+    axios.post('/api/products/delete', product)
+      .then(response => {
+        commit('setProducts', response.data);
+      })
   }
 }

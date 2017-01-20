@@ -86,8 +86,10 @@ class ProductsController @Inject()(val db: DBService) extends Controller with Ta
         && dbProduct.categoryId === product.categoryId
         && dbProduct.packId === product.packId)
         .take(1)
-        .delete
+        .result
     )
+      .map(_.head.id)
+      .flatMap(id => db.runAsync(products.filter(_.id === id).delete))
   }
 
   private def actionOnProduct(action: (ClientProduct) => Future[Int]): Action[JsValue] = Action.async(parse.json) { request =>

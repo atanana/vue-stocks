@@ -3,20 +3,20 @@
 # ~~~~
 
 # Home page
-GET           /                                controllers.Application.index
+GET         /                                controllers.Application.index
 
 # Map static resources from the /public folder to the /assets URL path
-GET           /assets/*file                    controllers.Assets.at(path="/public", file)
+GET         /assets/*file                    controllers.Assets.at(path="/public", file)
 
-GET           /api/products/all                controllers.ProductsController.allProducts
-POST          /api/products/new                controllers.ProductsController.addProduct
-DELETE        /api/products/                   controllers.ProductsController.deleteProduct
+GET         /api/products/all                controllers.ProductsController.allProducts
+POST        /api/products/new                controllers.ProductsController.addProduct
+POST        /api/products/delete             controllers.ProductsController.deleteProduct
 
-GET           /api/categories/all              controllers.CategoriesController.allItems
-PUT           /api/categories/update           controllers.CategoriesController.updateItems
+GET         /api/categories/all              controllers.CategoriesController.allItems
+PUT         /api/categories/update           controllers.CategoriesController.updateItems
 
-GET           /api/packs/all                   controllers.PacksController.allItems
-PUT           /api/packs/update                controllers.PacksController.updateItems
+GET         /api/packs/all                   controllers.PacksController.allItems
+PUT         /api/packs/update                controllers.PacksController.updateItems
 
-GET           /api/product-types/all           controllers.ProductTypesController.allItems
-PUT           /api/product-types/update        controllers.ProductTypesController.updateItems
+GET         /api/product-types/all           controllers.ProductTypesController.allItems
+PUT         /api/product-types/update        controllers.ProductTypesController.updateItems
