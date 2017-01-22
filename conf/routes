@@ -2,12 +2,6 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-# Home page
-GET         /                                controllers.Application.index
-
-# Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file                    controllers.Assets.at(path="/public", file)
-
 GET         /api/products/all                controllers.ProductsController.allProducts
 POST        /api/products/new                controllers.ProductsController.addProduct
 POST        /api/products/delete             controllers.ProductsController.deleteProduct
@@ -23,3 +17,8 @@ PUT         /api/product-types/update        controllers.ProductTypesController.
 
 GET         /login                           controllers.AuthorizationController.login
 POST        /login                           controllers.AuthorizationController.doLogin
+
+# Map static resources from the /public folder to the /assets URL path
+GET         /assets/*file                    controllers.Assets.at(path="/public", file)
+
+GET         /*path                           controllers.Application.index(path)

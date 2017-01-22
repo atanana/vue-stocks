@@ -34,7 +34,7 @@ class AuthorizationController @Inject()(val config: ConfigurationService) extend
         if (UserData(config.login, config.password) == user) {
           val duration = Duration(30, TimeUnit.DAYS).toSeconds.toInt
           val token = AuthorizedAction.createToken(config)
-          Redirect(routes.Application.index()).withCookies(Cookie(AuthorizedAction.TOKEN_KEY, token, Some(duration)))
+          Redirect(routes.Application.index("")).withCookies(Cookie(AuthorizedAction.TOKEN_KEY, token, Some(duration)))
         } else {
           BadRequest
         }

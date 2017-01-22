@@ -6,7 +6,7 @@ import play.api.mvc._
 
 class Application @Inject()(val authorizedAction: AuthorizedAction) extends Controller {
 
-  def index: Action[AnyContent] = authorizedAction {
+  def index(path: String): Action[AnyContent] = authorizedAction {
     Ok(views.html.index())
   }
 }
