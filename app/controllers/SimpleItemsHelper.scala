@@ -17,7 +17,10 @@ trait SimpleItem {
   val name: String
 }
 
-abstract class SimpleItemsHelper[ClientItemType <: SimpleItem, ItemType, TableType <: Table[ItemType] with WithNameColumn with WithIdColumn] extends Controller with Tables {
+abstract class SimpleItemsHelper[ClientItemType <: SimpleItem, ItemType, TableType <: Table[ItemType]
+  with WithNameColumn with WithIdColumn] extends Controller with Tables {
+  protected val authorizedAction: AuthorizedAction
+
   protected implicit val table: TableQuery[TableType]
 
   protected def createItem(item: ClientItemType): Future[Int]
@@ -42,7 +45,7 @@ abstract class SimpleItemsHelper[ClientItemType <: SimpleItem, ItemType, TableTy
     })
   }
 
-  def updateItems(): Action[JsValue] = AuthorizedAction.async(parse.json) { request =>
+  def updateItems(): Action[JsValue] = authorizedAction.async(parse.json) { request =>
     Try(
       request.body.as[JsArray].value
         .map(_.as[ClientItemType])
@@ -58,7 +61,7 @@ abstract class SimpleItemsHelper[ClientItemType <: SimpleItem, ItemType, TableTy
     }
   }
 
-  def allItems: Action[AnyContent] = AuthorizedAction.async {
+  def allItems: Action[AnyContent] = authorizedAction.async {
     sortedItems()
   }
 }

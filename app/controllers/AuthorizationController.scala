@@ -33,28 +33,32 @@ class AuthorizationController @Inject()(val config: ConfigurationService) extend
       user => {
         if (UserData(config.login, config.password) == user) {
           val duration = Duration(30, TimeUnit.DAYS).toSeconds.toInt
-          Redirect(routes.Application.index()).withCookies(Cookie(AuthorizedAction.TOKEN_KEY, createToken(), Some(duration)))
+          val token = AuthorizedAction.createToken(config)
+          Redirect(routes.Application.index()).withCookies(Cookie(AuthorizedAction.TOKEN_KEY, token, Some(duration)))
         } else {
           BadRequest
         }
       }
     )
   }
-
-  private def createToken() = {
-    BCrypt.hashpw(config.login + config.password, config.salt)
-  }
 }
 
-object AuthorizedAction extends ActionBuilder[Request] with Results {
-  val TOKEN_KEY = "token"
-
+class AuthorizedAction @Inject()(val config: ConfigurationService) extends ActionBuilder[Request] with Results {
   override def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]): Future[Result] = {
-    val token = request.cookies.get(TOKEN_KEY).map(_.value)
-    if (token.isDefined) {
+    if (request.cookies.get(AuthorizedAction.TOKEN_KEY)
+      .map(_.value)
+      .contains(AuthorizedAction.createToken(config))) {
       block(request)
     } else {
       Future(Redirect(routes.AuthorizationController.login()))
     }
+  }
+}
+
+object AuthorizedAction {
+  val TOKEN_KEY = "token"
+
+  def createToken(config: ConfigurationService): String = {
+    BCrypt.hashpw(config.login + config.password, config.salt)
   }
 }

@@ -13,7 +13,7 @@ import scala.concurrent.Future
 
 case class ClientPack(id: Option[Int], name: String) extends SimpleItem
 
-class PacksController @Inject()(val db: DBService) extends SimpleItemsHelper[ClientPack, Pack, Packs] {
+class PacksController @Inject()(val db: DBService, val authorizedAction: AuthorizedAction) extends SimpleItemsHelper[ClientPack, Pack, Packs] {
   override protected implicit val table: TableQuery[Packs] = packs
 
   protected override def createItem(item: ClientPack): Future[Int] = db.runAsync(packs += Pack(0, item.name))

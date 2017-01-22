@@ -14,7 +14,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
 
-class ProductsController @Inject()(val db: DBService) extends Controller with Tables {
+class ProductsController @Inject()(val db: DBService, authorizedAction: AuthorizedAction) extends Controller with Tables {
   private implicit val productsWrites: Writes[Product] = (
     (JsPath \ "id").write[Int] and
       (JsPath \ "productTypeId").write[Int] and
@@ -22,7 +22,7 @@ class ProductsController @Inject()(val db: DBService) extends Controller with Ta
       (JsPath \ "packId").write[Int]
     ) (unlift(Product.unapply))
 
-  def allProducts: Action[AnyContent] = AuthorizedAction.async {
+  def allProducts: Action[AnyContent] = authorizedAction.async {
     getAllProducts
   }
 
@@ -92,7 +92,7 @@ class ProductsController @Inject()(val db: DBService) extends Controller with Ta
       .flatMap(id => db.runAsync(products.filter(_.id === id).delete))
   }
 
-  private def actionOnProduct(action: (ClientProduct) => Future[Int]): Action[JsValue] = AuthorizedAction.async(parse.json) { request =>
+  private def actionOnProduct(action: (ClientProduct) => Future[Int]): Action[JsValue] = authorizedAction.async(parse.json) { request =>
     Try(request.body.as[ClientProduct]) match {
       case Success(product) => action(product).flatMap(_ => getAllProducts)
       case Failure(exception) =>

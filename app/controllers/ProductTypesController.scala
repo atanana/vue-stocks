@@ -13,7 +13,8 @@ import scala.concurrent.Future
 
 case class ClientProductType(id: Option[Int], name: String, categoryId: Option[Int]) extends SimpleItem
 
-class ProductTypesController @Inject()(val db: DBService) extends SimpleItemsHelper[ClientProductType, ProductType, ProductTypes] {
+class ProductTypesController @Inject()(val db: DBService, val authorizedAction: AuthorizedAction)
+  extends SimpleItemsHelper[ClientProductType, ProductType, ProductTypes] {
   override protected implicit val table: TableQuery[ProductTypes] = productTypes
 
   protected override def createItem(item: ClientProductType): Future[Int] =

@@ -13,7 +13,7 @@ import scala.concurrent.Future
 
 case class ClientCategory(id: Option[Int], name: String) extends SimpleItem
 
-class CategoriesController @Inject()(val db: DBService) extends SimpleItemsHelper[ClientCategory, Category, Categories] {
+class CategoriesController @Inject()(val db: DBService, val authorizedAction: AuthorizedAction) extends SimpleItemsHelper[ClientCategory, Category, Categories] {
   override protected implicit val table: TableQuery[Categories] = categories
 
   protected override def createItem(item: ClientCategory): Future[Int] = db.runAsync(categories += Category(0, item.name))
