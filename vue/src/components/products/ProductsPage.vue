@@ -31,7 +31,25 @@
             pack: this.packsMap[pack.packId],
             quantity: pack.quantity
           }))
-        }));
+        }))
+          .sort((left, right) => {
+            const leftProduct = left.productType.name;
+            const rightProduct = right.productType.name;
+            let result = 0;
+
+            if (leftProduct !== rightProduct) {
+              result = leftProduct < rightProduct ? -1 : 1;
+            } else {
+              const leftCategory = left.category.name;
+              const rightCategory = right.category.name;
+
+              if (leftCategory !== rightCategory) {
+                result = leftCategory < rightCategory ? -1 : 1;
+              }
+            }
+
+            return result;
+          });
       },
       categoriesMap() {
         return toMap(this.categories);
