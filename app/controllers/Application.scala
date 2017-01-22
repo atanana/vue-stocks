@@ -4,7 +4,7 @@ import play.api.mvc._
 
 class Application extends Controller {
 
-  def index = Action {
+  def index = AuthorizedAction {
     Ok(views.html.index())
   }
 }

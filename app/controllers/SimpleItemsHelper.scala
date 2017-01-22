@@ -42,7 +42,7 @@ abstract class SimpleItemsHelper[ClientItemType <: SimpleItem, ItemType, TableTy
     })
   }
 
-  def updateItems(): Action[JsValue] = Action.async(parse.json) { request =>
+  def updateItems(): Action[JsValue] = AuthorizedAction.async(parse.json) { request =>
     Try(
       request.body.as[JsArray].value
         .map(_.as[ClientItemType])
@@ -58,7 +58,7 @@ abstract class SimpleItemsHelper[ClientItemType <: SimpleItem, ItemType, TableTy
     }
   }
 
-  def allItems: Action[AnyContent] = Action.async {
+  def allItems: Action[AnyContent] = AuthorizedAction.async {
     sortedItems()
   }
 }

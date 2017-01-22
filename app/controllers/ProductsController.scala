@@ -22,7 +22,7 @@ class ProductsController @Inject()(val db: DBService) extends Controller with Ta
       (JsPath \ "packId").write[Int]
     ) (unlift(Product.unapply))
 
-  def allProducts: Action[AnyContent] = Action.async {
+  def allProducts: Action[AnyContent] = AuthorizedAction.async {
     getAllProducts
   }
 
@@ -92,7 +92,7 @@ class ProductsController @Inject()(val db: DBService) extends Controller with Ta
       .flatMap(id => db.runAsync(products.filter(_.id === id).delete))
   }
 
-  private def actionOnProduct(action: (ClientProduct) => Future[Int]): Action[JsValue] = Action.async(parse.json) { request =>
+  private def actionOnProduct(action: (ClientProduct) => Future[Int]): Action[JsValue] = AuthorizedAction.async(parse.json) { request =>
     Try(request.body.as[ClientProduct]) match {
       case Success(product) => action(product).flatMap(_ => getAllProducts)
       case Failure(exception) =>
