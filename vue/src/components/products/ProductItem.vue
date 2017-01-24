@@ -1,13 +1,13 @@
 <template>
   <tr>
-    <td>{{name}}</td>
-    <td>{{category}}</td>
+    <td>{{safeProductType.name}}</td>
+    <td>{{safeCategory.name}}</td>
     <td>
       <span class="tag is-info" v-for="item in packs">
         {{item.name}} x {{item.quantity}}
         <button class="delete is-small" @click="deleteItem(item.id, item.name)"></button>
       </span>
-      <AddProductPackPopup :categoryId="categoryId" :productTypeId="productTypeId" :packs="packTypes"/>
+      <AddProductPackPopup :categoryId="safeCategory.id" :productTypeId="safeProductType.id" :packs="packTypes"/>
     </td>
   </tr>
 </template>
@@ -27,33 +27,11 @@
       AddProductPackPopup
     },
     computed: {//todo refactor
-      name() {
-        if (this.product.productType) {
-          return this.product.productType.name;
-        } else {
-          return '-';
-        }
+      safeProductType() {
+        return this.product.productType || {id: 0, name: '-'};
       },
-      productTypeId() {
-        if (this.product.productType) {
-          return this.product.productType.id;
-        } else {
-          return 0;
-        }
-      },
-      category() {
-        if (this.product.category) {
-          return this.product.category.name;
-        } else {
-          return '-';
-        }
-      },
-      categoryId() {
-        if (this.product.category) {
-          return this.product.category.id;
-        } else {
-          return 0;
-        }
+      safeCategory() {
+        return this.product.category || {id: 0, name: '-'}
       },
       packs() {
         return this.product.packs.map(item => ({
