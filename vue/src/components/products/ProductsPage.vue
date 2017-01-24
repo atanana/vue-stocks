@@ -7,6 +7,7 @@
     />
     <ProductsList
       :products="products"
+      :packs="packs"
     />
   </div>
 </template>

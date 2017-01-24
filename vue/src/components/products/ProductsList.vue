@@ -2,15 +2,16 @@
   <table class="table is-striped">
     <thead>
       <tr>
-        <th>Имя</th>
-        <th>Место</th>
-        <th>Количество</th>
+        <th width="20%">Имя</th>
+        <th width="20%">Место</th>
+        <th width="*">Количество</th>
       </tr>
     </thead>
     <tbody>
       <ProductItem
         v-for="product in products"
         :product="product"
+        :packTypes="packs"
       />
     </tbody>
   </table>
@@ -20,7 +21,7 @@
   import ProductItem from 'components/products/ProductItem'
 
   export default {
-    props: ['products'],
+    props: ['products', 'packs'],
     components: {
       ProductItem
     }

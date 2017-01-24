@@ -7,6 +7,7 @@
         {{item.name}} x {{item.quantity}}
         <button class="delete is-small" @click="deleteItem(item.id, item.name)"></button>
       </span>
+      <AddProductPackPopup :categoryId="categoryId" :productTypeId="productTypeId" :packs="packTypes"/>
     </td>
   </tr>
 </template>
@@ -18,9 +19,14 @@
 </style>
 
 <script>
+  import AddProductPackPopup from 'components/products/AddProductPackPopup'
+
   export default {
-    props: ['product'],
-    computed: {
+    props: ['product', 'packTypes'],
+    components: {
+      AddProductPackPopup
+    },
+    computed: {//todo refactor
       name() {
         if (this.product.productType) {
           return this.product.productType.name;
@@ -28,11 +34,25 @@
           return '-';
         }
       },
+      productTypeId() {
+        if (this.product.productType) {
+          return this.product.productType.id;
+        } else {
+          return 0;
+        }
+      },
       category() {
         if (this.product.category) {
           return this.product.category.name;
         } else {
           return '-';
+        }
+      },
+      categoryId() {
+        if (this.product.category) {
+          return this.product.category.id;
+        } else {
+          return 0;
         }
       },
       packs() {
