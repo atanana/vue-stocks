@@ -7,7 +7,7 @@ lazy val `vue_stocks` = (project in file(".")).enablePlugins(PlayScala)
 scalaVersion := "2.11.7"
 
 libraryDependencies ++= Seq(
-//  jdbc,
+  filters,
   cache,
   ws,
   "com.typesafe.slick" %% "slick" % "3.1.1",
@@ -19,4 +19,6 @@ libraryDependencies ++= Seq(
 
 unmanagedResourceDirectories in Test <+= baseDirectory(_ / "target/web/public/test")
 
-resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases"  
+resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases"
+
+pipelineStages := Seq(digest)
