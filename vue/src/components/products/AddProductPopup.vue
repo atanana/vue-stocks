@@ -25,7 +25,7 @@
           <!--suppress HtmlFormInputWithoutLabel -->
           <select v-model="productTypeId" class="form-control">
             <option
-              v-for="productType in productTypes"
+              v-for="productType in availableProductTypes"
               :value="productType.id"
             >{{productType.name}}
             </option>
@@ -69,6 +69,13 @@
     computed: {
       availableCategories() {
         return [{name: 'Без категории'}].concat(this.categories);
+      },
+      availableProductTypes() {
+        if (this.categoryId) {
+          return this.productTypes.filter(productType => productType.categoryId === this.categoryId);
+        } else {
+          return this.productTypes;
+        }
       }
     },
     methods: {
@@ -83,6 +90,16 @@
         this.categoryId = null;
         this.productTypeId = null;
         this.packId = null;
+      }
+    },
+    watch: {
+      productTypeId() {
+        for (let productType of this.productTypes) {
+          if (productType.id === this.productTypeId && productType.categoryId) {
+            this.categoryId = productType.categoryId;
+            break;
+          }
+        }
       }
     }
   }
