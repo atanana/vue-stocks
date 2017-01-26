@@ -1,6 +1,6 @@
 <template>
   <div>
-    <AddNewButton label="Добавить продукт" @addNew="showAddProductPopup = true"/>
+    <FloatingButton @addNew="showAddProductPopup = true"/>
     <Popup v-if="showAddProductPopup" @okPressed="addProduct" @close="showAddProductPopup = false"
            buttonLabel="Добавить">
       <div slot="header">
@@ -51,12 +51,14 @@
 <script>
   import Popup from 'components/Popup';
   import AddNewButton from 'components/buttons/AddNewButton';
+  import FloatingButton from 'components/buttons/FloatingButton';
 
   export default {
     props: ['categories', 'productTypes', 'packs'],
     components: {
       Popup,
-      AddNewButton
+      AddNewButton,
+      FloatingButton
     },
     data() {
       return {
