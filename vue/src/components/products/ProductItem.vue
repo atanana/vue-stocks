@@ -43,7 +43,7 @@
     },
     methods: {
       deleteItem(packId, packName) {
-        if (confirm(`Вы действительно хотите удалить ${this.name} ${packName}`)) {
+        if (confirm(`Вы действительно хотите удалить ${this.safeProductType.name} ${packName}`)) {
           this.$store.dispatch('deleteProduct', {
             productTypeId: this.product.productType.id,
             categoryId: this.product.category.id,
