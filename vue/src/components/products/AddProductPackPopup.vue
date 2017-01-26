@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="add-pack-container">
     <span class="tag is-dark add-pack" @click="showAddPackPopup = true">
       Добавить упаковку
     </span>
@@ -59,7 +59,10 @@
 
 <style>
   .add-pack {
-    margin-top: 1em;
     cursor: pointer;
+  }
+
+  .add-pack-container {
+    display: inline-block;
   }
 </style>
