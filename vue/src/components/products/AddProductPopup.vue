@@ -74,7 +74,7 @@
       },
       availableProductTypes() {
         if (this.categoryId) {
-          return this.productTypes.filter(productType => productType.categoryId === this.categoryId);
+          return this.productTypes.filter(productType => productType.categoryId === this.categoryId || !productType.categoryId);
         } else {
           return this.productTypes;
         }
