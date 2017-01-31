@@ -5,6 +5,15 @@
       :productTypes="productTypes"
       :packs="packs"
     />
+    <div class="tabs is-boxed is-fullwidth">
+      <ul>
+        <li v-for="category in availableCategories"
+            :class="{'is-active':category.id == currentCategory}"
+            @click="currentCategory = category.id">
+          <a>{{category.name}}</a>
+        </li>
+      </ul>
+    </div>
     <ProductsList
       :products="products"
       :packs="packs"
@@ -25,34 +34,40 @@
     computed: {
       products() {
         //noinspection JSUnresolvedVariable
-        return this.$store.state.products.map(product => ({
-          productType: this.productTypesMap[product.productTypeId],
-          category: this.categoriesMap[product.categoryId],
-          packs: product.packs.map(pack => ({
-            pack: this.packsMap[pack.packId],
-            quantity: pack.quantity
-          }))
-        }))
-          .sort((left, right) => {
-            let result = 0;
-            if (left.productType && right.productType && left.category && right.category) {
-              const leftProduct = left.productType.name;
-              const rightProduct = right.productType.name;
+        let products = this.$store.state.products
+          .map(product => ({
+            productType: this.productTypesMap[product.productTypeId],
+            category: this.categoriesMap[product.categoryId],
+            packs: product.packs.map(pack => ({
+              pack: this.packsMap[pack.packId],
+              quantity: pack.quantity
+            }))
+          }));
 
-              if (leftProduct !== rightProduct) {
-                result = leftProduct < rightProduct ? -1 : 1;
-              } else {
-                const leftCategory = left.category.name;
-                const rightCategory = right.category.name;
+        if (this.currentCategory) {
+          products = products.filter(product => product.category.id === this.currentCategory);
+        }
 
-                if (leftCategory !== rightCategory) {
-                  result = leftCategory < rightCategory ? -1 : 1;
-                }
+        return products.sort((left, right) => {
+          let result = 0;
+          if (left.productType && right.productType && left.category && right.category) {
+            const leftProduct = left.productType.name;
+            const rightProduct = right.productType.name;
+
+            if (leftProduct !== rightProduct) {
+              result = leftProduct < rightProduct ? -1 : 1;
+            } else {
+              const leftCategory = left.category.name;
+              const rightCategory = right.category.name;
+
+              if (leftCategory !== rightCategory) {
+                result = leftCategory < rightCategory ? -1 : 1;
               }
             }
+          }
 
-            return result;
-          });
+          return result;
+        });
       },
       categoriesMap() {
         return toMap(this.categories);
@@ -71,6 +86,14 @@
       },
       packs() {
         return this.$store.state.packs;
+      },
+      availableCategories() {
+        return [{name: 'Всё', id: 0}].concat(this.categories);
+      }
+    },
+    data() {
+      return {
+        currentCategory: 0
       }
     },
     created() {
