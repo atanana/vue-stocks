@@ -15,7 +15,11 @@ libraryDependencies ++= Seq(
   "com.typesafe.play" %% "play-slick-evolutions" % "2.0.0",
   "mysql" % "mysql-connector-java" % "5.1.23",
   "org.mindrot" % "jbcrypt" % "0.3m",
-  specs2 % Test)
+  specs2 % Test,
+  "org.scalatest" % "scalatest_2.11" % "3.0.1" % "test",
+  "org.mockito" % "mockito-core" % "2.2.25" % "test",
+  "org.scalatestplus.play" % "scalatestplus-play_2.11" % "2.0.0-M1" % "test"
+)
 
 unmanagedResourceDirectories in Test <+= baseDirectory(_ / "target/web/public/test")
 
