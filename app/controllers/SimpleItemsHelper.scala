@@ -11,7 +11,6 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
 
-//todo use always simple item instead of custom client items?
 trait SimpleItem {
   val id: Option[Int]
   val name: String
