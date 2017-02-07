@@ -32,15 +32,19 @@ class AuthorizationController @Inject()(val config: ConfigurationService) extend
       _ => BadRequest,
       user => {
         if (UserData(config.login, config.password) == user) {
-          val duration = Duration(30, TimeUnit.DAYS).toSeconds.toInt
           val token = AuthorizedAction.createToken(config)
-          Redirect(routes.Application.index("")).withCookies(Cookie(AuthorizedAction.TOKEN_KEY, token, Some(duration)))
+          val cookie = Cookie(AuthorizedAction.TOKEN_KEY, token, Some(AuthorizationController.SESSION_DURATION))
+          Redirect(routes.Application.index("")).withCookies(cookie)
         } else {
           BadRequest
         }
       }
     )
   }
+}
+
+object AuthorizationController {
+  val SESSION_DURATION: Int = Duration(30, TimeUnit.DAYS).toSeconds.toInt
 }
 
 class AuthorizedAction @Inject()(val config: ConfigurationService) extends ActionBuilder[Request] with Results {
