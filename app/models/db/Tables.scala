@@ -60,6 +60,7 @@ class Products(tag: Tag) extends Table[Product](tag, "products") with WithIdColu
   def * : ProvenShape[Product] = (id, productTypeId, categoryId, packId) <> (Product.tupled, Product.unapply)
 }
 
+//todo delete
 trait Tables {
   val db: DBService
 

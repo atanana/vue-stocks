@@ -7,14 +7,14 @@ import play.api.Logger
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import play.api.mvc._
-import services.db.DBService
+import services.db.{ClientProduct, DBService, ProductsDao}
 import slick.driver.MySQLDriver.api._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
 
-class ProductsController @Inject()(val db: DBService, authorizedAction: AuthorizedAction) extends Controller with Tables {
+class ProductsController @Inject()(val db: DBService, authorizedAction: AuthorizedAction, val productsDao: ProductsDao) extends Controller with Tables {
   private implicit val productsWrites: Writes[Product] = (
     (JsPath \ "id").write[Int] and
       (JsPath \ "productTypeId").write[Int] and
@@ -27,7 +27,7 @@ class ProductsController @Inject()(val db: DBService, authorizedAction: Authoriz
   }
 
   private def getAllProducts = {
-    db.runAsync(products.sortBy(_.id).result)
+    productsDao.allProducts
       .map(products => {
         val data = groupProducts(products)
           .map((toJson _).tupled)
@@ -64,21 +64,15 @@ class ProductsController @Inject()(val db: DBService, authorizedAction: Authoriz
     )
   }
 
-  case class ClientProduct(categoryId: Int, productTypeId: Int, packId: Int)
-
   implicit val clientProductReads: Reads[ClientProduct] = (
     (JsPath \ "categoryId").read[Int] and
       (JsPath \ "productTypeId").read[Int] and
       (JsPath \ "packId").read[Int]
     ) (ClientProduct.apply _)
 
-  def addProduct(): Action[JsValue] = actionOnProduct(insertProduct)
+  def addProduct(): Action[JsValue] = actionOnProduct(productsDao.addProduct)
 
   def deleteProduct(): Action[JsValue] = actionOnProduct(deleteProduct)
-
-  private def insertProduct(product: ClientProduct) = {
-    db.runAsync(products += Product(0, product.productTypeId, product.categoryId, product.packId))
-  }
 
   private def deleteProduct(product: ClientProduct) = {
     db.runAsync(
