@@ -14,7 +14,7 @@ case class ClientProductType(id: Option[Int], name: String, categoryId: Option[I
 class ProductTypesDao @Inject()(db: DBService) extends SimpleDao[ClientProductType, ProductType, ProductTypes](db) {
   override protected val table: TableQuery[ProductTypes] = TableQuery[ProductTypes]
 
-  def addProductType(productType: ClientProductType): Future[Int] = {
+  override def createItem(productType: ClientProductType): Future[Int] = {
     db.runAsync(table += ProductType(0, productType.name, productType.categoryId))
   }
 

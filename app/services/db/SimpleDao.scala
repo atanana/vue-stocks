@@ -25,4 +25,6 @@ abstract class SimpleDao[ClientItemType <: SimpleItem, ItemType, TableType <: Ta
   def sorted(): Future[Seq[ItemType]] = {
     db.runAsync(table.sortBy(_.name.asc).result)
   }
+
+  def createItem(item: ClientItemType): Future[Int]
 }

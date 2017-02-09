@@ -7,10 +7,8 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json.{Writes, _}
 import services.db.{ClientPack, DBService, PacksDao}
 
-import scala.concurrent.Future
-
-class PacksController @Inject()(val db: DBService, val authorizedAction: AuthorizedAction, packsDao: PacksDao) extends SimpleItemsHelper[ClientPack, Pack, Packs](packsDao) {
-  protected override def createItem(pack: ClientPack): Future[Int] = packsDao.addPack(pack)
+class PacksController @Inject()(val db: DBService, val authorizedAction: AuthorizedAction, packsDao: PacksDao)
+  extends SimpleItemsHelper[ClientPack, Pack, Packs](packsDao) {
 
   protected implicit val itemReads: Reads[ClientPack] = (
     (JsPath \ "id").readNullable[Int] and

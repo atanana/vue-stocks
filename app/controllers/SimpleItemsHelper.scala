@@ -15,8 +15,6 @@ abstract class SimpleItemsHelper[ClientItemType <: SimpleItem, ItemType, TableTy
   with WithNameColumn with WithIdColumn](dao: SimpleDao[ClientItemType, ItemType, TableType]) extends Controller {
   protected val authorizedAction: AuthorizedAction
 
-  protected def createItem(item: ClientItemType): Future[Int]
-
   protected implicit val itemReads: Reads[ClientItemType]
 
   protected implicit val itemWrites: Writes[ItemType]
@@ -24,7 +22,7 @@ abstract class SimpleItemsHelper[ClientItemType <: SimpleItem, ItemType, TableTy
   private def updateAndCreateItems(newItems: Seq[ClientItemType]): Seq[Future[Int]] = {
     newItems.map(item => item.id
       .map(id => updateItem(item, id))
-      .getOrElse(createItem(item)))
+      .getOrElse(dao.createItem(item)))
   }
 
   protected def updateItem(item: ClientItemType, id: Int): Future[Int] = {

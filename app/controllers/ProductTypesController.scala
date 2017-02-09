@@ -11,8 +11,6 @@ import scala.concurrent.Future
 
 class ProductTypesController @Inject()(val db: DBService, val authorizedAction: AuthorizedAction, productTypesDao: ProductTypesDao)
   extends SimpleItemsHelper[ClientProductType, ProductType, ProductTypes](productTypesDao) {
-  protected override def createItem(productType: ClientProductType): Future[Int] =
-    productTypesDao.addProductType(productType)
 
   protected implicit val itemReads: Reads[ClientProductType] = (
     (JsPath \ "id").readNullable[Int] and
