@@ -5,9 +5,9 @@ import javax.inject.Inject
 import models.db._
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{Writes, _}
-import services.db.{ClientPack, DBService, PacksDao}
+import services.db.{ClientPack, PacksDao}
 
-class PacksController @Inject()(val db: DBService, val authorizedAction: AuthorizedAction, packsDao: PacksDao)
+class PacksController @Inject()(val authorizedAction: AuthorizedAction, packsDao: PacksDao)
   extends SimpleItemsHelper[ClientPack, Pack, Packs](packsDao) {
 
   protected implicit val itemReads: Reads[ClientPack] = (

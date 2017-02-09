@@ -5,11 +5,11 @@ import javax.inject.Inject
 import models.db._
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{Writes, _}
-import services.db.{ClientProductType, DBService, ProductTypesDao}
+import services.db.{ClientProductType, ProductTypesDao}
 
 import scala.concurrent.Future
 
-class ProductTypesController @Inject()(val db: DBService, val authorizedAction: AuthorizedAction, productTypesDao: ProductTypesDao)
+class ProductTypesController @Inject()(val authorizedAction: AuthorizedAction, productTypesDao: ProductTypesDao)
   extends SimpleItemsHelper[ClientProductType, ProductType, ProductTypes](productTypesDao) {
 
   protected implicit val itemReads: Reads[ClientProductType] = (
