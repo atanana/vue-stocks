@@ -1,11 +1,12 @@
 package controllers
 
 import controllers.AuthorizationUtility.authorizedRequest
+import models.db.Product
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{spy, verify, when}
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfter, Matchers, WordSpecLike}
-import play.api.libs.json.{JsArray, JsValue, Json}
+import play.api.libs.json.{JsArray, JsObject, JsValue, Json}
 import play.api.mvc.BodyParsers.parse
 import play.api.mvc.Request
 import play.api.mvc.Results._
@@ -89,5 +90,33 @@ class ProductsControllerTest extends WordSpecLike with MockitoSugar with BeforeA
       verify(productsDao).deleteProduct(ClientProduct(categoryId, productTypeId, packId))
       verify(productsDao).allProducts
     }
+  }
+
+  "ProductsController#allProducts" should {
+    "check authorization" in {
+      controller.allProducts().apply(FakeRequest())
+      verify(authorizedAction).async(parse.json)(any())
+    }
+
+    "correct return products list" in {
+      when(productsDao.allProducts).thenReturn(Future(List(
+        Product(1, 1, 1, 1)
+      )))
+
+      await(controller.allProducts.apply(authorizedRequest)) shouldEqual Ok(JsArray(List(
+        productJson(1, 1, 1, 1)
+      )))
+    }
+  }
+
+  private def productJson(productTypeId: Int, categoryId: Int, packId: Int, quantity: Int): JsObject = {
+    Json.obj(
+      "productTypeId" -> productTypeId,
+      "categoryId" -> categoryId,
+      "packs" -> Json.arr(Json.obj(
+        "packId" -> packId,
+        "quantity" -> quantity
+      ))
+    )
   }
 }
