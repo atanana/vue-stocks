@@ -6,7 +6,7 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{spy, verify, when}
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfter, Matchers, WordSpecLike}
-import play.api.libs.json.{JsArray, JsObject, JsValue, Json}
+import play.api.libs.json._
 import play.api.mvc.BodyParsers.parse
 import play.api.mvc.Request
 import play.api.mvc.Results._
@@ -98,14 +98,42 @@ class ProductsControllerTest extends WordSpecLike with MockitoSugar with BeforeA
       verify(authorizedAction).async(parse.json)(any())
     }
 
-    "correct return products list" in {
+    "correct group products" in {
       when(productsDao.allProducts).thenReturn(Future(List(
-        Product(1, 1, 1, 1)
+        Product(1, 1, 1, 1),
+        Product(2, 1, 2, 1),
+        Product(3, 2, 2, 2),
+        Product(4, 3, 3, 3),
+        Product(5, 3, 1, 3)
       )))
 
-      await(controller.allProducts.apply(authorizedRequest)) shouldEqual Ok(JsArray(List(
-        productJson(1, 1, 1, 1)
+      val result = await(controller.allProducts.apply(authorizedRequest))
+      result.header.status shouldEqual OK
+      contentAsJson(Future(result)).as[JsArray].value.toSet shouldEqual Set(
+        productJson(1, 1, 1, 1),
+        productJson(1, 2, 1, 1),
+        productJson(2, 2, 2, 1),
+        productJson(3, 3, 3, 1),
+        productJson(3, 1, 3, 1)
+      )
+    }
+
+    "correct group product packs" in {
+      when(productsDao.allProducts).thenReturn(Future(List(
+        Product(1, 1, 1, 1),
+        Product(2, 1, 1, 2),
+        Product(3, 1, 1, 1)
       )))
+
+      val result = await(controller.allProducts.apply(authorizedRequest))
+      result.header.status shouldEqual OK
+      val product = contentAsJson(Future(result)).as[JsArray].value.head.as[JsObject].value
+      product("productTypeId") shouldEqual JsNumber(1)
+      product("categoryId") shouldEqual JsNumber(1)
+      product("packs").as[JsArray].value.toSet shouldEqual Set(
+        packJson(1, 2),
+        packJson(2, 1)
+      )
     }
   }
 
@@ -113,10 +141,14 @@ class ProductsControllerTest extends WordSpecLike with MockitoSugar with BeforeA
     Json.obj(
       "productTypeId" -> productTypeId,
       "categoryId" -> categoryId,
-      "packs" -> Json.arr(Json.obj(
-        "packId" -> packId,
-        "quantity" -> quantity
-      ))
+      "packs" -> Json.arr(packJson(packId, quantity))
+    )
+  }
+
+  private def packJson(packId: Int, quantity: Int) = {
+    Json.obj(
+      "packId" -> packId,
+      "quantity" -> quantity
     )
   }
 }
