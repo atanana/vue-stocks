@@ -7,8 +7,8 @@ import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfter, Matchers, WordSpecLike}
 import play.api.libs.json.{JsArray, JsValue, Json}
 import play.api.mvc.BodyParsers.parse
+import play.api.mvc.Request
 import play.api.mvc.Results._
-import play.api.mvc.{Action, Request}
 import play.api.test.Helpers._
 import play.api.test._
 import services.db.{ClientProduct, DBService, ProductsDao}
@@ -36,13 +36,11 @@ class ProductsControllerTest extends WordSpecLike with MockitoSugar with BeforeA
     }
 
     "return bad request due to no json" in {
-      val action: Action[JsValue] = controller.addProduct()
       val request: Request[JsValue] = authorizedRequest.withBody[JsValue](JsArray())
-      await(action.apply(request)) shouldEqual BadRequest
+      await(controller.addProduct().apply(request)) shouldEqual BadRequest
     }
 
     "add product and return all products" in {
-      val action: Action[JsValue] = controller.addProduct()
       val categoryId = 12
       val productTypeId = 123
       val packId = 1234
@@ -54,8 +52,42 @@ class ProductsControllerTest extends WordSpecLike with MockitoSugar with BeforeA
       val request: Request[JsValue] = authorizedRequest.withBody[JsValue](payload)
       when(productsDao.allProducts).thenReturn(Future(List()))
       when(productsDao.addProduct(any())).thenReturn(Future(1))
-      await(action.apply(request)) shouldEqual Ok(JsArray())
+
+      await(controller.addProduct().apply(request)) shouldEqual Ok(JsArray())
+
       verify(productsDao).addProduct(ClientProduct(categoryId, productTypeId, packId))
+      verify(productsDao).allProducts
+    }
+  }
+
+  "ProductsController#deleteProduct" should {
+    "check authorization" in {
+      controller.deleteProduct().apply(FakeRequest())
+      verify(authorizedAction).async(parse.json)(any())
+    }
+
+    "return bad request due to no json" in {
+      val request: Request[JsValue] = authorizedRequest.withBody[JsValue](JsArray())
+      await(controller.deleteProduct().apply(request)) shouldEqual BadRequest
+    }
+
+    "delete product and return all products" in {
+      val categoryId = 12
+      val productTypeId = 123
+      val packId = 1234
+      val payload = Json.obj(
+        "categoryId" -> categoryId,
+        "productTypeId" -> productTypeId,
+        "packId" -> packId
+      )
+      val request: Request[JsValue] = authorizedRequest.withBody[JsValue](payload)
+      when(productsDao.allProducts).thenReturn(Future(List()))
+      when(productsDao.deleteProduct(any())).thenReturn(Future(1))
+
+      await(controller.deleteProduct().apply(request)) shouldEqual Ok(JsArray())
+
+      verify(productsDao).deleteProduct(ClientProduct(categoryId, productTypeId, packId))
+      verify(productsDao).allProducts
     }
   }
 }

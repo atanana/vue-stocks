@@ -8,7 +8,6 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import play.api.mvc._
 import services.db.{ClientProduct, DBService, ProductsDao}
-import slick.driver.MySQLDriver.api._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -72,19 +71,7 @@ class ProductsController @Inject()(val db: DBService, authorizedAction: Authoriz
 
   def addProduct(): Action[JsValue] = actionOnProduct(productsDao.addProduct)
 
-  def deleteProduct(): Action[JsValue] = actionOnProduct(deleteProduct)
-
-  private def deleteProduct(product: ClientProduct) = {
-    db.runAsync(
-      products.filter(dbProduct => dbProduct.productTypeId === product.productTypeId
-        && dbProduct.categoryId === product.categoryId
-        && dbProduct.packId === product.packId)
-        .take(1)
-        .result
-    )
-      .map(_.head.id)
-      .flatMap(id => db.runAsync(products.filter(_.id === id).delete))
-  }
+  def deleteProduct(): Action[JsValue] = actionOnProduct(productsDao.deleteProduct)
 
   private def actionOnProduct(action: (ClientProduct) => Future[Int]): Action[JsValue] = authorizedAction.async(parse.json) { request =>
     Try(request.body.as[ClientProduct]) match {
