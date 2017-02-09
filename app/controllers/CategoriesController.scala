@@ -5,18 +5,13 @@ import javax.inject.Inject
 import models.db.{Categories, Category}
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{Writes, _}
-import services.db.DBService
-import slick.driver.MySQLDriver.api._
-import slick.lifted.TableQuery
+import services.db.{CategoriesDao, ClientCategory, DBService}
 
 import scala.concurrent.Future
 
-case class ClientCategory(id: Option[Int], name: String) extends SimpleItem
-
-class CategoriesController @Inject()(val db: DBService, val authorizedAction: AuthorizedAction) extends SimpleItemsHelper[ClientCategory, Category, Categories] {
-  override protected implicit val table: TableQuery[Categories] = categories
-
-  protected override def createItem(item: ClientCategory): Future[Int] = db.runAsync(categories += Category(0, item.name))
+class CategoriesController @Inject()(val db: DBService, val authorizedAction: AuthorizedAction, categoriesDao: CategoriesDao)
+  extends SimpleItemsHelper[ClientCategory, Category, Categories](categoriesDao) {
+  protected override def createItem(item: ClientCategory): Future[Int] = categoriesDao.addCategory(item)
 
   protected implicit val itemReads: Reads[ClientCategory] = (
     (JsPath \ "id").readNullable[Int] and

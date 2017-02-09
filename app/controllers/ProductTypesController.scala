@@ -5,20 +5,14 @@ import javax.inject.Inject
 import models.db._
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{Writes, _}
-import services.db.DBService
-import slick.driver.MySQLDriver.api._
-import slick.lifted.TableQuery
+import services.db.{ClientProductType, DBService, ProductTypesDao}
 
 import scala.concurrent.Future
 
-case class ClientProductType(id: Option[Int], name: String, categoryId: Option[Int]) extends SimpleItem
-
-class ProductTypesController @Inject()(val db: DBService, val authorizedAction: AuthorizedAction)
-  extends SimpleItemsHelper[ClientProductType, ProductType, ProductTypes] {
-  override protected implicit val table: TableQuery[ProductTypes] = productTypes
-
-  protected override def createItem(item: ClientProductType): Future[Int] =
-    db.runAsync(productTypes += ProductType(0, item.name, item.categoryId))
+class ProductTypesController @Inject()(val db: DBService, val authorizedAction: AuthorizedAction, productTypesDao: ProductTypesDao)
+  extends SimpleItemsHelper[ClientProductType, ProductType, ProductTypes](productTypesDao) {
+  protected override def createItem(productType: ClientProductType): Future[Int] =
+    productTypesDao.addProductType(productType)
 
   protected implicit val itemReads: Reads[ClientProductType] = (
     (JsPath \ "id").readNullable[Int] and
@@ -32,11 +26,5 @@ class ProductTypesController @Inject()(val db: DBService, val authorizedAction: 
       (JsPath \ "categoryId").writeNullable[Int]
     ) (unlift(ProductType.unapply))
 
-  override protected def updateItem(item: ClientProductType, id: Int): Future[Int] = {
-    val query = productTypes
-      .filter(_.id === id)
-      .map(productType => (productType.name, productType.categoryId))
-      .update((item.name, item.categoryId))
-    db.runAsync(query)
-  }
+  override protected def updateItem(item: ClientProductType, id: Int): Future[Int] = productTypesDao.updateProductType(item, id)
 }

@@ -12,22 +12,20 @@ import play.api.mvc.Request
 import play.api.mvc.Results._
 import play.api.test.Helpers._
 import play.api.test._
-import services.db.{ClientProduct, DBService, ProductsDao}
+import services.db.{ClientProduct, ProductsDao}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class ProductsControllerTest extends WordSpecLike with MockitoSugar with BeforeAndAfter with Matchers {
   var controller: ProductsController = _
-  var db: DBService = _
   var authorizedAction: AuthorizedAction = _
   var productsDao: ProductsDao = _
 
   before {
-    db = mock[DBService]
     productsDao = mock[ProductsDao]
     authorizedAction = spy(new AuthorizedAction(AuthorizationUtility.config))
-    controller = new ProductsController(db, authorizedAction, productsDao)
+    controller = new ProductsController(authorizedAction, productsDao)
   }
 
   "ProductsController#addProduct" should {

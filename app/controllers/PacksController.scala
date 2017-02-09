@@ -5,18 +5,12 @@ import javax.inject.Inject
 import models.db._
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{Writes, _}
-import services.db.DBService
-import slick.driver.MySQLDriver.api._
-import slick.lifted.TableQuery
+import services.db.{ClientPack, DBService, PacksDao}
 
 import scala.concurrent.Future
 
-case class ClientPack(id: Option[Int], name: String) extends SimpleItem
-
-class PacksController @Inject()(val db: DBService, val authorizedAction: AuthorizedAction) extends SimpleItemsHelper[ClientPack, Pack, Packs] {
-  override protected implicit val table: TableQuery[Packs] = packs
-
-  protected override def createItem(item: ClientPack): Future[Int] = db.runAsync(packs += Pack(0, item.name))
+class PacksController @Inject()(val db: DBService, val authorizedAction: AuthorizedAction, packsDao: PacksDao) extends SimpleItemsHelper[ClientPack, Pack, Packs](packsDao) {
+  protected override def createItem(pack: ClientPack): Future[Int] = packsDao.addPack(pack)
 
   protected implicit val itemReads: Reads[ClientPack] = (
     (JsPath \ "id").readNullable[Int] and

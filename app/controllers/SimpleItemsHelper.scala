@@ -4,23 +4,16 @@ import models.db._
 import play.api.Logger
 import play.api.libs.json._
 import play.api.mvc._
+import services.db.{SimpleDao, SimpleItem}
 import slick.driver.MySQLDriver.api.Table
-import slick.lifted.TableQuery
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
 
-trait SimpleItem {
-  val id: Option[Int]
-  val name: String
-}
-
 abstract class SimpleItemsHelper[ClientItemType <: SimpleItem, ItemType, TableType <: Table[ItemType]
-  with WithNameColumn with WithIdColumn] extends Controller with Tables {
+  with WithNameColumn with WithIdColumn](dao: SimpleDao[ClientItemType, ItemType, TableType]) extends Controller {
   protected val authorizedAction: AuthorizedAction
-
-  protected implicit val table: TableQuery[TableType]
 
   protected def createItem(item: ClientItemType): Future[Int]
 
@@ -35,11 +28,11 @@ abstract class SimpleItemsHelper[ClientItemType <: SimpleItem, ItemType, TableTy
   }
 
   protected def updateItem(item: ClientItemType, id: Int): Future[Int] = {
-    updateName(id, item.name)
+    dao.updateName(id, item.name)
   }
 
   private def sortedItems(): Future[Result] = {
-    sorted[ItemType, TableType].map(items => {
+    dao.sorted().map(items => {
       Ok(Json.toJson(items))
     })
   }
@@ -52,7 +45,7 @@ abstract class SimpleItemsHelper[ClientItemType <: SimpleItem, ItemType, TableTy
       case Success(newPacks) =>
         val newItemsIds = newPacks.map(_.id).flatMap(_.toList)
         Future.sequence(
-          deleteBesides(newItemsIds) +: updateAndCreateItems(newPacks)
+          dao.deleteBesides(newItemsIds) +: updateAndCreateItems(newPacks)
         ).flatMap(_ => sortedItems())
       case Failure(exception) =>
         Logger.error(s"Cannot parse request: ${request.body}", exception)

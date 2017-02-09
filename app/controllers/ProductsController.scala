@@ -7,13 +7,13 @@ import play.api.Logger
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import play.api.mvc._
-import services.db.{ClientProduct, DBService, ProductsDao}
+import services.db.{ClientProduct, ProductsDao}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
 
-class ProductsController @Inject()(val db: DBService, authorizedAction: AuthorizedAction, val productsDao: ProductsDao) extends Controller {
+class ProductsController @Inject()(authorizedAction: AuthorizedAction, val productsDao: ProductsDao) extends Controller {
   private implicit val productsWrites: Writes[Product] = (
     (JsPath \ "id").write[Int] and
       (JsPath \ "productTypeId").write[Int] and
