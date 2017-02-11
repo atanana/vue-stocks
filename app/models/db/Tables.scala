@@ -1,10 +1,7 @@
 package models.db
 
-import services.db.DBService
 import slick.driver.MySQLDriver.api._
-import slick.lifted.{ProvenShape, TableQuery}
-
-import scala.concurrent.Future
+import slick.lifted.ProvenShape
 
 case class Category(id: Int, name: String)
 
@@ -58,25 +55,4 @@ class Products(tag: Tag) extends Table[Product](tag, "products") with WithIdColu
   def packId: Rep[Int] = column[Int]("pack_id")
 
   def * : ProvenShape[Product] = (id, productTypeId, categoryId, packId) <> (Product.tupled, Product.unapply)
-}
-
-//todo delete
-trait Tables {
-  val db: DBService
-
-  val categories: TableQuery[Categories] = TableQuery[Categories]
-  val packs: TableQuery[Packs] = TableQuery[Packs]
-  val productTypes: TableQuery[ProductTypes] = TableQuery[ProductTypes]
-
-  protected def sorted[I, T <: Table[I] with WithNameColumn]()(implicit query: TableQuery[T]): Future[Seq[T#TableElementType]] = {
-    db.runAsync(query.sortBy(_.name.asc).result)
-  }
-
-  protected def updateName[T <: Table[_] with WithNameColumn with WithIdColumn](id: Int, name: String)(implicit query: TableQuery[T]): Future[Int] = {
-    db.runAsync(query.filter(_.id === id).map(_.name).update(name))
-  }
-
-  protected def deleteBesides[T <: Table[_] with WithIdColumn](ids: Seq[Int])(implicit query: TableQuery[T]): Future[Int] = {
-    db.runAsync(query.filterNot(_.id.inSet(ids)).delete)
-  }
 }
