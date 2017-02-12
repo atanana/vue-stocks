@@ -1,5 +1,5 @@
 <template>
-  <button type="button" class="button is-primary" @click="emitSave">
+  <button type="button" class="button is-primary" @click="$emit('save')">
     <span class="icon">
       <i class="fa fa-floppy-o"></i>
     </span>
@@ -8,11 +8,5 @@
 </template>
 
 <script>
-  export default {
-    methods: {
-      emitSave() {
-        this.$emit('save');
-      }
-    }
-  }
+  export default {}
 </script>

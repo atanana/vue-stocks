@@ -1,5 +1,5 @@
 <template>
-  <button type="button" class="button is-danger" @click="emitDelete">
+  <button type="button" class="button is-danger" @click="$emit('delete')">
     <span class="icon">
       <i class="fa fa-times"></i>
     </span>
@@ -8,11 +8,5 @@
 </template>
 
 <script>
-  export default {
-    methods: {
-      emitDelete() {
-        this.$emit('delete');
-      }
-    }
-  }
+  export default {}
 </script>
