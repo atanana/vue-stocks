@@ -2,7 +2,6 @@
   <div>
     <SimpleList
       :items="itemsData"
-      :newItemPlaceholder="newItemPlaceholder"
       :newItemLabel="newItemLabel"
     />
     <SaveButton @save="$emit('saveItems', itemsData)"/>

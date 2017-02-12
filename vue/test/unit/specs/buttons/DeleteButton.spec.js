@@ -4,7 +4,7 @@ import DeleteButton from "src/components/buttons/DeleteButton";
 describe('DeleteButton.vue', () => {
   let vm;
 
-  before(() => {
+  beforeEach(() => {
     vm = createButton();
   });
 

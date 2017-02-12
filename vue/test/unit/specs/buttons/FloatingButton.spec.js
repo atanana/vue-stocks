@@ -4,7 +4,7 @@ import FloatingButton from "src/components/buttons/FloatingButton";
 describe('FloatingButton.vue', () => {
   let vm;
 
-  before(() => {
+  beforeEach(() => {
     vm = createButton();
   });
 

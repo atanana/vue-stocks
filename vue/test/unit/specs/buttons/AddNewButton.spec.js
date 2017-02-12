@@ -6,7 +6,7 @@ describe('AddNewButton.vue', () => {
 
   let vm;
 
-  before(() => {
+  beforeEach(() => {
     vm = createButton();
   });
 

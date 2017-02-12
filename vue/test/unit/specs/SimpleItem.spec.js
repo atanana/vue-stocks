@@ -7,16 +7,17 @@ describe('SimpleItem.vue', () => {
 
   let vm;
 
-  before(() => {
-    vm = createItem();
+  beforeEach(() => {
+    vm = createItem({
+      name: itemName
+    });
   });
-  function createItem() {
+
+  function createItem(item) {
     const Ctor = Vue.extend(SimpleItem);
     return new Ctor({
       propsData: {
-        item: {
-          name: itemName
-        },
+        item: item,
         placeholder: placeholder
       }
     }).$mount();
@@ -34,6 +35,12 @@ describe('SimpleItem.vue', () => {
 
     const deleteButton = vm.$refs.deleteButton.$el;
     expect(deleteButton.className.split(' ')).to.contain('delete-button');
+  });
+
+  it('should render empty item', () => {
+    vm = createItem({});
+    const input = vm.$el.querySelector('input');
+    expect(input.value).to.empty;
   });
 
   it('should dispatch correct event', () => {

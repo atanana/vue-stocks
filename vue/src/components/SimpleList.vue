@@ -6,9 +6,10 @@
       :placeholder="newItemPlaceholder"
       class="simple-item"
       @deleteItem="deleteItem(item)"
+      ref="items"
     />
 
-    <AddNewButton :label="newItemLabel" @addNew="addNewItem"/>
+    <AddNewButton ref="addNew" :label="newItemLabel" @addNew="addNewItem"/>
   </div>
 </template>
 

@@ -4,7 +4,7 @@ import SaveButton from "src/components/buttons/SaveButton";
 describe('SaveButton.vue', () => {
   let vm;
 
-  before(() => {
+  beforeEach(() => {
     vm = createButton();
   });
 
