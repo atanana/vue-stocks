@@ -2,7 +2,7 @@
   <div class="simple-item">
     <!--suppress HtmlFormInputWithoutLabel -->
     <input type="text" class="input" :placeholder="placeholder" v-model="item.name">
-    <DeleteButton class="delete-button" @delete="$emit('deleteItem')"/>
+    <DeleteButton ref="deleteButton" class="delete-button" @delete="$emit('deleteItem')"/>
   </div>
 </template>
 

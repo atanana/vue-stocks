@@ -2,6 +2,8 @@ import Vue from "vue";
 import AddNewButton from "src/components/buttons/AddNewButton";
 
 describe('AddNewButton.vue', () => {
+  const label = 'test label';
+
   let vm;
 
   before(() => {
@@ -10,10 +12,14 @@ describe('AddNewButton.vue', () => {
 
   function createButton() {
     const Ctor = Vue.extend(AddNewButton);
-    return new Ctor().$mount();
+    return new Ctor({
+      propsData: {
+        label: label
+      }
+    }).$mount();
   }
 
-  it('should render correct contents', done => {
+  it('should render correct contents', () => {
     const button = vm.$el;
     expect(button).to.exist;
 
@@ -24,14 +30,8 @@ describe('AddNewButton.vue', () => {
     const icon = button.querySelector('.icon .fa.fa-plus');
     expect(icon).to.exist;
 
-    const label = 'test label';
-    vm.label = label;
-    Vue.nextTick(() => {
-      const span = button.querySelector('span:last-child');
-      expect(span.textContent).to.equal(label);
-
-      done();
-    });
+    const span = button.querySelector('span:last-child');
+    expect(span.textContent).to.equal(label);
   });
 
   it('should dispatch correct event', () => {
