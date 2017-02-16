@@ -12,7 +12,7 @@
         </option>
       </select>
     </span>
-    <DeleteButton class="delete-button" @delete="$emit('deleteItem')"/>
+    <DeleteButton ref="deleteButton" class="delete-button" @delete="$emit('deleteItem')"/>
   </div>
 </template>
 

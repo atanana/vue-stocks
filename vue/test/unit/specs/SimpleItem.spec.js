@@ -43,7 +43,7 @@ describe('SimpleItem.vue', () => {
     expect(input.value).to.empty;
   });
 
-  it('should dispatch correct event', () => {
+  it('should dispatch correct delete event', () => {
     const spy = sinon.spy();
     vm.$on('deleteItem', spy);
     vm.$refs.deleteButton.$el.click();
