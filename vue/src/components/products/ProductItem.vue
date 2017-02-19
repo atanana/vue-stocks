@@ -7,7 +7,8 @@
         {{item.name}} x {{item.quantity}}
         <button class="delete is-small" @click="deleteItem(item.id, item.name)"></button>
       </span>
-      <AddProductPackPopup :categoryId="safeCategory.id" :productTypeId="safeProductType.id" :packs="packTypes"/>
+      <AddProductPackPopup ref="addProductPack" :categoryId="safeCategory.id" :productTypeId="safeProductType.id"
+                           :packs="packTypes"/>
     </td>
   </tr>
 </template>
