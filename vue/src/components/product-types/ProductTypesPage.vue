@@ -5,8 +5,9 @@
       :categories="categories"
       :newItemPlaceholder="newItemPlaceholder"
       :newItemLabel="newItemLabel"
+      ref="items"
     />
-    <SaveButton @save="$emit('saveItems', itemsData)"/>
+    <SaveButton ref="saveButton" @save="$emit('saveItems', itemsData)"/>
   </div>
 </template>
 
