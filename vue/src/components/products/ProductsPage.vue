@@ -4,6 +4,7 @@
       :categories="categories"
       :productTypes="productTypes"
       :packs="packs"
+      ref="addProductPopup"
     />
     <div class="tabs is-boxed is-fullwidth">
       <ul>
@@ -17,6 +18,7 @@
     <ProductsList
       :products="products"
       :packs="packs"
+      ref="products"
     />
   </div>
 </template>
@@ -33,41 +35,7 @@
     },
     computed: {
       products() {
-        //noinspection JSUnresolvedVariable
-        let products = this.$store.state.products
-          .map(product => ({
-            productType: this.$store.getters.productTypesMap[product.productTypeId],
-            category: this.$store.getters.categoriesMap[product.categoryId],
-            packs: product.packs.map(pack => ({
-              pack: this.$store.getters.packsMap[pack.packId],
-              quantity: pack.quantity
-            }))
-          }));
-
-        if (this.currentCategory) {
-          products = products.filter(product => product.category.id === this.currentCategory);
-        }
-
-        return products.sort((left, right) => {
-          let result = 0;
-          if (left.productType && right.productType && left.category && right.category) {
-            const leftProduct = left.productType.name;
-            const rightProduct = right.productType.name;
-
-            if (leftProduct !== rightProduct) {
-              result = leftProduct < rightProduct ? -1 : 1;
-            } else {
-              const leftCategory = left.category.name;
-              const rightCategory = right.category.name;
-
-              if (leftCategory !== rightCategory) {
-                result = leftCategory < rightCategory ? -1 : 1;
-              }
-            }
-          }
-
-          return result;
-        });
+        return this.$store.getters.groupedProducts(this.currentCategory);
       },
       categories() {
         return this.$store.state.categories;
