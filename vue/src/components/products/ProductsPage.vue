@@ -36,10 +36,10 @@
         //noinspection JSUnresolvedVariable
         let products = this.$store.state.products
           .map(product => ({
-            productType: this.productTypesMap[product.productTypeId],
-            category: this.categoriesMap[product.categoryId],
+            productType: this.$store.getters.productTypesMap[product.productTypeId],
+            category: this.$store.getters.categoriesMap[product.categoryId],
             packs: product.packs.map(pack => ({
-              pack: this.packsMap[pack.packId],
+              pack: this.$store.getters.packsMap[pack.packId],
               quantity: pack.quantity
             }))
           }));
@@ -68,15 +68,6 @@
 
           return result;
         });
-      },
-      categoriesMap() {
-        return toMap(this.categories);
-      },
-      packsMap() {
-        return toMap(this.packs);
-      },
-      productTypesMap() {
-        return toMap(this.productTypes);
       },
       categories() {
         return this.$store.state.categories;
