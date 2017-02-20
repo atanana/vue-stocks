@@ -12,6 +12,7 @@
         v-for="product in products"
         :product="product"
         :packTypes="packs"
+        ref="items"
       />
     </tbody>
   </table>
