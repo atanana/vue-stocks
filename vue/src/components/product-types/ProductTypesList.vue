@@ -29,7 +29,7 @@
         this.items.push({});
 
         this.$nextTick(() => {
-          const inputs = document.querySelectorAll('.simple-item input');
+          const inputs = this.$el.querySelectorAll('.simple-item input');
           inputs[inputs.length - 1].focus();
         });
       },

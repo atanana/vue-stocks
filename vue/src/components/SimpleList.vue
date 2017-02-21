@@ -14,6 +14,7 @@
 </template>
 
 <script>
+  import Vue from 'vue';
   import SimpleItem from 'components/SimpleItem';
   import AddNewButton from 'components/buttons/AddNewButton';
 
@@ -28,7 +29,7 @@
         this.items.push({});
 
         this.$nextTick(() => {
-          const inputs = document.querySelectorAll('.simple-item input');
+          const inputs = this.$el.querySelectorAll('.simple-item input');
           inputs[inputs.length - 1].focus();
         });
       },
