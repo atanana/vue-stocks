@@ -1,13 +1,13 @@
 <template>
   <div>
     <ProductTypesList
-      :items="itemsData"
+      :items="productTypes"
       :categories="categories"
-      :newItemPlaceholder="newItemPlaceholder"
-      :newItemLabel="newItemLabel"
+      newItemPlaceholder="Название типа продуктов"
+      newItemLabel="Добавить тип продуктов"
       ref="items"
     />
-    <SaveButton ref="saveButton" @save="$emit('saveItems', itemsData)"/>
+    <SaveButton ref="saveButton" @save="save(itemsData)"/>
   </div>
 </template>
 
@@ -17,20 +17,31 @@
   import {copyData} from "utility/objectUtils";
 
   export default {
-    props: ['items', 'categories', 'newItemPlaceholder', 'newItemLabel'],
     components: {
       ProductTypesList,
       SaveButton
     },
-    data() {
-      return {
-        itemsData: copyData(this.items)
+    computed: {
+      productTypes() {
+        return copyData(this.$store.state.productTypes);
+      },
+      categories() {
+        return this.$store.state.categories;
       }
     },
     watch: {
-      items(newItems) {
+      productTypes(newItems) {
         this.itemsData = copyData(newItems)
       }
-    }
+    },
+    created() {
+      this.$store.dispatch('loadProductTypes');
+      this.$store.dispatch('loadCategories');
+    },
+    methods: {
+      save(newProductTypes) {
+        this.$store.dispatch('updateProductTypes', newProductTypes);
+      }
+    },
   }
 </script>

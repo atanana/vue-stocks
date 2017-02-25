@@ -3,91 +3,18 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import ProductsPage from "components/products/ProductsPage";
-import SimplePage from "components/SimplePage";
+import CategoriesPage from "components/CategoriesPage";
+import PacksPage from "components/PacksPage";
 import ProductTypesPage from "components/product-types/ProductTypesPage";
 import store from "store/store";
 
 Vue.use(VueRouter);
 
-const Products = {
-  template: '<ProductsPage/>',
-  components: {ProductsPage}
-};
-
-const Categories = {
-  template: `<SimplePage
-                :items="categories"
-                @saveItems="save"
-                newItemPlaceholder="Название категории"
-                newItemLabel="Добавить категорию"/>`,
-  components: {SimplePage},
-  computed: {
-    categories() {
-      return this.$store.state.categories;
-    }
-  },
-  created() {
-    this.$store.dispatch('loadCategories');
-  },
-  methods: {
-    save(newCategories) {
-      this.$store.dispatch('updateCategories', newCategories);
-    }
-  }
-};
-const Packs = {
-  template: `<SimplePage
-                :items="packs"
-                @saveItems="save"
-                newItemPlaceholder="Название упаковки"
-                newItemLabel="Добавить упаковку"/>`,
-  components: {SimplePage},
-  computed: {
-    packs() {
-      return this.$store.state.packs;
-    }
-  },
-  created() {
-    this.$store.dispatch('loadPacks');
-  },
-  methods: {
-    save(newPacks) {
-      this.$store.dispatch('updatePacks', newPacks);
-    }
-  }
-};
-const ProductTypes = {
-  template: `<ProductTypesPage
-                :items="productTypes"
-                :categories="categories"
-                @saveItems="save"
-                newItemPlaceholder="Название типа продуктов"
-                newItemLabel="Добавить тип продуктов"/>`,
-  components: {ProductTypesPage},
-  computed: {
-    productTypes() {
-      return this.$store.state.productTypes;
-    },
-    categories() {
-      return this.$store.state.categories;
-    }
-  },
-  created() {
-    this.$store.dispatch('loadProductTypes');
-    this.$store.dispatch('loadCategories');
-  },
-  methods: {
-    save(newProductTypes) {
-      this.$store.dispatch('updateProductTypes', newProductTypes);
-    }
-  }
-};
-
 const routes = [
-  {path: '/products', component: Products},
-  {path: '/categories', component: Categories},
-  {path: '/packs', component: Packs},
-  {path: '/product-types', component: ProductTypes},
+  {path: '/products', component: ProductsPage},
+  {path: '/categories', component: CategoriesPage},
+  {path: '/packs', component: PacksPage},
+  {path: '/product-types', component: ProductTypesPage},
 ];
 
 const router = new VueRouter({
