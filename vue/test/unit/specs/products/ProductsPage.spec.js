@@ -120,10 +120,10 @@ describe('ProductsPage.vue', () => {
     }));
 
     const tabs = vm.$el.querySelectorAll('.tabs.is-boxed.is-fullwidth li');
-    expect(tabs[0].className.split(' ')).to.contain('is-active');
-    expect(tabs[1].className.split(' ')).to.not.contain('is-active');
-    expect(tabs[2].className.split(' ')).to.not.contain('is-active');
-    expect(tabs[3].className.split(' ')).to.not.contain('is-active');
+    expect(tabs[0]).to.have.class('is-active');
+    expect(tabs[1]).to.not.have.class('is-active');
+    expect(tabs[2]).to.not.have.class('is-active');
+    expect(tabs[3]).to.not.have.class('is-active');
   });
 
   it('should highlight selected category', (done) => {
@@ -146,10 +146,10 @@ describe('ProductsPage.vue', () => {
 
     Vue.nextTick(() => {
       const tabs = vm.$el.querySelectorAll('.tabs.is-boxed.is-fullwidth li');
-      expect(tabs[0].className.split(' ')).to.not.contain('is-active');
-      expect(tabs[1].className.split(' ')).to.not.contain('is-active');
-      expect(tabs[2].className.split(' ')).to.contain('is-active');
-      expect(tabs[3].className.split(' ')).to.not.contain('is-active');
+      expect(tabs[0]).to.not.have.class('is-active');
+      expect(tabs[1]).to.not.have.class('is-active');
+      expect(tabs[2]).to.have.class('is-active');
+      expect(tabs[3]).to.not.have.class('is-active');
 
       done();
     });

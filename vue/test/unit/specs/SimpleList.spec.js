@@ -38,7 +38,7 @@ describe('SimpleList.vue', () => {
     function checkItem(item, originalItem) {
       expect(item.item).to.eql(originalItem);
       expect(item.placeholder).to.equal(newItemPlaceholder);
-      expect(item.$el.className.split(' ')).to.contain('simple-item');
+      expect(item.$el).to.have.class('simple-item');
     }
   });
 

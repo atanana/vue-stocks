@@ -1,10 +1,10 @@
 <template>
   <div class="add-pack-container">
-    <span class="tag is-dark add-pack" @click="showAddPackPopup = true">
+    <span class="tag is-dark add-pack" @click="showAddPackPopup = true" ref="addButton">
       Добавить упаковку
     </span>
     <Popup v-if="showAddPackPopup" @okPressed="addProduct" @close="showAddPackPopup = false"
-           buttonLabel="Добавить">
+           buttonLabel="Добавить" ref="popup">
       <div slot="header">
         <h2>Добавьте продукт</h2>
       </div>

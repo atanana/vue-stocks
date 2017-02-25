@@ -26,7 +26,7 @@ describe('ProductTypesItem.vue', () => {
     });
 
     const item = vm.$el;
-    expect(item.className.split(' ')).to.contain('simple-item');
+    expect(item).to.have.class('simple-item');
 
     const input = item.querySelector('input.input');
     expect(input).to.exist;
@@ -38,7 +38,7 @@ describe('ProductTypesItem.vue', () => {
 
     const select = selectContainer.querySelector('select');
     expect(select).to.exist;
-    expect(select.className.split(' ')).to.contain('category-select');
+    expect(select).to.have.class('category-select');
     expect(select.selectedIndex).to.equal(2);
 
     const options = select.querySelectorAll('option');
@@ -55,7 +55,7 @@ describe('ProductTypesItem.vue', () => {
 
     const deleteButton = vm.$refs.deleteButton.$el;
     expect(deleteButton).to.exist;
-    expect(deleteButton.className.split(' ')).to.contain('delete-button');
+    expect(deleteButton).to.have.class('delete-button');
   });
 
   it('should render empty item', () => {

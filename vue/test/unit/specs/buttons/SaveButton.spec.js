@@ -17,9 +17,8 @@ describe('SaveButton.vue', () => {
     const button = vm.$el;
     expect(button).to.exist;
 
-    const buttonClasses = button.className.split(' ');
-    expect(buttonClasses).to.contain('button');
-    expect(buttonClasses).to.contain('is-primary');
+    expect(button).to.have.class('button');
+    expect(button).to.have.class('is-primary');
 
     const icon = button.querySelector('.icon .fa.fa-floppy-o');
     expect(icon).to.exist;

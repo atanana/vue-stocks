@@ -17,9 +17,8 @@ describe('DeleteButton.vue', () => {
     const button = vm.$el;
     expect(button).to.exist;
 
-    const buttonClasses = button.className.split(' ');
-    expect(buttonClasses).to.contain('button');
-    expect(buttonClasses).to.contain('is-danger');
+    expect(button).to.have.class('button');
+    expect(button).to.have.class('is-danger');
 
     const icon = button.querySelector('.icon .fa.fa-times');
     expect(icon).to.exist;

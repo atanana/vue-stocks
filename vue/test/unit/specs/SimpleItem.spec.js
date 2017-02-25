@@ -34,7 +34,7 @@ describe('SimpleItem.vue', () => {
     expect(input.value).to.equal(itemName);
 
     const deleteButton = vm.$refs.deleteButton.$el;
-    expect(deleteButton.className.split(' ')).to.contain('delete-button');
+    expect(deleteButton).to.have.class('delete-button');
   });
 
   it('should render empty item', () => {

@@ -27,9 +27,8 @@ describe('ProductsList.vue', () => {
 
     const table = vm.$el;
 
-    const tableClasses = table.className.split(' ');
-    expect(tableClasses).to.contains('table');
-    expect(tableClasses).to.contains('is-striped');
+    expect(table).to.have.class('table');
+    expect(table).to.have.class('is-striped');
 
     const headers = table.querySelectorAll('thead th');
     checkHeader(headers[0], '30%', 'Имя');

@@ -17,8 +17,7 @@ describe('FloatingButton.vue', () => {
     const button = vm.$el;
     expect(button).to.exist;
 
-    const buttonClasses = button.className.split(' ');
-    expect(buttonClasses).to.contain('floating-button');
+    expect(button).to.have.class('floating-button');
 
     const span = button.querySelector('p.plus');
     expect(span.textContent).to.equal('+');
