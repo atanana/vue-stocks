@@ -1,8 +1,8 @@
 <template>
   <div>
-    <FloatingButton @addNew="showAddProductPopup = true"/>
+    <FloatingButton @addNew="showAddProductPopup = true" ref="addButton"/>
     <Popup v-if="showAddProductPopup" @okPressed="addProduct" @close="showAddProductPopup = false"
-           buttonLabel="Добавить">
+           buttonLabel="Добавить" ref="popup">
       <div slot="header">
         <h2>Добавьте продукт</h2>
       </div>
