@@ -2,65 +2,100 @@ import Vue from "vue";
 import ProductTypesPage from "src/components/product-types/ProductTypesPage";
 
 describe('ProductTypesPage.vue', () => {
-  function createPage(propsData) {
+  function createPage(store) {
     const Ctor = Vue.extend(ProductTypesPage);
     return new Ctor({
-      propsData
+      store
     }).$mount();
   }
 
+  function createStore(store) {
+    return Object.assign({
+      dispatch: function () {
+      },
+      state: {
+        productTypes: [],
+        categories: []
+      }
+    }, store);
+  }
+
+  it('should data on create', () => {
+    const store = createStore({});
+    const storeMock = sinon.mock(store);
+    storeMock.expects('dispatch').withExactArgs('loadProductTypes');
+    storeMock.expects('dispatch').withExactArgs('loadCategories');
+
+    createPage(store);
+
+    storeMock.verify();
+  });
+
   it('should render correct contents', () => {
-    const items = [
-      {name: 'item 1'},
-      {name: 'item 2'}
+    const productTypes = [
+      {name: 'productType 1'},
+      {name: 'productType 2'},
+      {name: 'productType 3'}
     ];
-    const placeholder = 'test placeholder';
-    const label = 'test label';
-    const vm = createPage({
-      items: items,
-      categories: [],
-      newItemPlaceholder: placeholder,
-      newItemLabel: label
-    });
+    const categories = [
+      {name: 'category 1'},
+      {name: 'category 2'},
+      {name: 'category 3'}
+    ];
+    const vm = createPage(createStore({
+      state: {
+        productTypes,
+        categories
+      }
+    }));
 
     const itemsList = vm.$refs.items;
     expect(itemsList).to.exist;
-    expect(itemsList.items).to.eql(items);
-    expect(itemsList.newItemLabel).to.eql(label);
-    expect(itemsList.newItemPlaceholder).to.eql(placeholder);
+    expect(itemsList.items).to.eql(productTypes);
+    expect(itemsList.categories).to.eql(categories);
+    expect(itemsList.newItemLabel).to.eql('Добавить тип продуктов');
+    expect(itemsList.newItemPlaceholder).to.eql('Название типа продуктов');
 
     const saveButton = vm.$refs.saveButton;
     expect(saveButton).to.exist;
   });
 
   it('should copy data for list', () => {
-    const items = [
-      {name: 'item 1'},
-      {name: 'item 2'}
+    const productTypes = [
+      {name: 'productType 1'},
+      {name: 'productType 2'},
+      {name: 'productType 3'}
     ];
-    const vm = createPage({
-      items: items,
-      categories: []
-    });
+    const vm = createPage(createStore({
+      state: {
+        productTypes,
+        categories: []
+      }
+    }));
 
     const itemsList = vm.$refs.items;
-    items.push({});
-    expect(itemsList.items).to.not.eql(items);
+    productTypes.push({});
+    expect(itemsList.items).to.not.eql(productTypes);
   });
 
   it('should dispatch correct event', () => {
-    const items = [
-      {name: 'item 1'},
-      {name: 'item 2'}
+    const productTypes = [
+      {name: 'productType 1'},
+      {name: 'productType 2'},
+      {name: 'productType 3'}
     ];
-    const vm = createPage({
-      items: items,
-      categories: []
+    const store = createStore({
+      state: {
+        productTypes,
+        categories: []
+      }
     });
+    const vm = createPage(store);
+    const storeMock = sinon.mock(store);
+    storeMock.expects('dispatch').withExactArgs('updateProductTypes', productTypes);
 
-    const spy = sinon.spy();
-    vm.$on('saveItems', spy);
-    vm.$refs.saveButton.$el.click();
-    expect(spy).to.have.been.calledWith(items);
+    vm.$refs.saveButton.$emit('save');
+
+    storeMock.verify();
   });
 });
