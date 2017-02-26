@@ -56,7 +56,7 @@ class CategoriesControllerTest extends WordSpecLike with MockFactory with Before
 
     "returns all items" in {
       val request: Request[JsValue] = authorizedRequest.withBody[JsValue](Json.arr())
-      (dao.deleteBesides _).expects(*).returns(Future(1))
+      (dao.deleteBesides _).expects(List()).returns(Future(1))
       (dao.sorted _).expects().returns(Future(List(
         Category(1, "test 1"),
         Category(2, "test 2"),
@@ -72,7 +72,7 @@ class CategoriesControllerTest extends WordSpecLike with MockFactory with Before
 
     "creates new items" in {
       val categoryName = "test 1"
-      (dao.deleteBesides _).expects(*).returns(Future(1))
+      (dao.deleteBesides _).expects(List()).returns(Future(1))
       (dao.createItem _).expects(ClientCategory(None, categoryName)).returns(Future(1))
       (dao.sorted _).expects().returns(Future(List()))
 
