@@ -16,11 +16,19 @@ script:
   # Trick to avoid unnecessary cache updates
   - find $HOME/.sbt -name "*.lock" | xargs rm
 
+  # js tests
+  - cd vue; npm run test
+
 scala:
   - 2.11.7
 
 jdk:
   - oraclejdk8
+
+node_js:
+  - "0.12"
+
+install: "cd vue;npm install"
 
 notifications:
   email:
