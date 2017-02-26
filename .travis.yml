@@ -35,7 +35,11 @@ env:
 
 install:
   - nvm install $NODE_VERSION
-  - npm install -g npm@latest;cd vue;npm install;cd ..
+  - nvm use $NODE_VERSION
+  - npm install -g npm@latest
+  - cd vue
+  - npm install
+  - cd ..
 
 notifications:
   email:
