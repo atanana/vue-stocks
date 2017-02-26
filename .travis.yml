@@ -19,7 +19,8 @@ script:
 
   # js tests
   - nvm use $NODE_VERSION
-  - cd vue && npm run test
+  - cd vue
+  - npm run test
 
 scala:
   - 2.11.7
