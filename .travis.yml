@@ -6,7 +6,7 @@ cache:
     - $HOME/.m2/repository
     - $HOME/.sbt
     - $HOME/.ivy2
-    - $HOME/.npm
+#    - $HOME/.npm
 
 language: scala
 
@@ -31,7 +31,7 @@ node_js:
   - "7.2.0"
 
 install:
-  - find $HOME/.npm -name "*.lock" | xargs rm
+#  - find $HOME/.npm -name "*.lock" | xargs rm
   - cd vue;npm install
 
 notifications:
