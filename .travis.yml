@@ -18,7 +18,7 @@ script:
   - find $HOME/.sbt -name "*.lock" | xargs rm
 
   # js tests
-  - runJsTests.sh
+  - ./runJsTests.sh
 
 scala:
   - 2.11.7
