@@ -2,12 +2,10 @@ package controllers
 
 import controllers.AuthorizationUtility.authorizedRequest
 import models.db.Category
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.{spy, verify, when}
-import org.scalatest.mockito.MockitoSugar
+import org.scalamock.scalatest.MockFactory
 import org.scalatest.{BeforeAndAfter, Matchers, WordSpecLike}
+import play.api.http.Status.SEE_OTHER
 import play.api.libs.json.{JsObject, JsValue, Json}
-import play.api.mvc.BodyParsers.parse
 import play.api.mvc.Request
 import play.api.mvc.Results._
 import play.api.test.FakeRequest
@@ -17,30 +15,24 @@ import services.db.{CategoriesDao, ClientCategory}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class CategoriesControllerTest extends WordSpecLike with MockitoSugar with BeforeAndAfter with Matchers {
+class CategoriesControllerTest extends WordSpecLike with MockFactory with BeforeAndAfter with Matchers {
   var controller: CategoriesController = _
   var authorizedAction: AuthorizedAction = _
   var dao: CategoriesDao = _
 
   before {
     dao = mock[CategoriesDao]
-    authorizedAction = spy(new AuthorizedAction(AuthorizationUtility.config))
+    authorizedAction = new AuthorizedAction(AuthorizationUtility.config)
     controller = new CategoriesController(authorizedAction, dao)
-
-    when(dao.deleteBesides(any())).thenReturn(Future(1))
-    when(dao.updateName(any(), any())).thenReturn(Future(1))
-    when(dao.createItem(any())).thenReturn(Future(1))
-    when(dao.sorted()).thenReturn(Future(List()))
   }
 
   "CategoriesController#allItems" should {
     "check authorization" in {
-      controller.allItems().apply(FakeRequest())
-      verify(authorizedAction).async(parse.json)(any())
+      status(controller.allItems().apply(FakeRequest())) shouldBe SEE_OTHER
     }
 
     "returns valid data" in {
-      when(dao.sorted()).thenReturn(Future(List(
+      (dao.sorted _).expects().returns(Future(List(
         Category(1, "test 1"),
         Category(2, "test 2"),
         Category(3, "test 3")
@@ -55,8 +47,8 @@ class CategoriesControllerTest extends WordSpecLike with MockitoSugar with Befor
 
   "CategoriesController#updateItems" should {
     "check authorization" in {
-      controller.updateItems().apply(FakeRequest())
-      verify(authorizedAction).async(parse.json)(any())
+      val request: Request[JsValue] = FakeRequest().withBody[JsValue](Json.obj())
+      status(controller.updateItems().apply(request)) shouldBe SEE_OTHER
     }
 
     "return bad request due to incorrect json" in {
@@ -66,11 +58,13 @@ class CategoriesControllerTest extends WordSpecLike with MockitoSugar with Befor
 
     "returns all items" in {
       val request: Request[JsValue] = authorizedRequest.withBody[JsValue](Json.arr())
-      when(dao.sorted()).thenReturn(Future(List(
+      (dao.deleteBesides _).expects(*).returns(Future(1))
+      (dao.sorted _).expects().returns(Future(List(
         Category(1, "test 1"),
         Category(2, "test 2"),
         Category(3, "test 3")
       )))
+
       await(controller.updateItems().apply(request)) shouldEqual Ok(Json.arr(
         categoryJson(1, "test 1"),
         categoryJson(2, "test 2"),
@@ -80,24 +74,33 @@ class CategoriesControllerTest extends WordSpecLike with MockitoSugar with Befor
 
     "creates new items" in {
       val categoryName = "test 1"
+      (dao.deleteBesides _).expects(*).returns(Future(1))
+      (dao.createItem _).expects(ClientCategory(None, categoryName)).returns(Future(1))
+      (dao.sorted _).expects().returns(Future(List()))
+
       val request: Request[JsValue] = authorizedRequest.withBody[JsValue](Json.arr(newCategoryJson(categoryName)))
       await(controller.updateItems().apply(request)).header.status shouldEqual OK
-      verify(dao).createItem(ClientCategory(None, categoryName))
     }
 
     "deletes items" in {
       val categoryId = 1
+      (dao.deleteBesides _).expects(List(categoryId)).returns(Future(1))
+      (dao.updateName _).expects(*, *).returns(Future(1))
+      (dao.sorted _).expects().returns(Future(List()))
+
       val request: Request[JsValue] = authorizedRequest.withBody[JsValue](Json.arr(categoryJson(categoryId, "test")))
       await(controller.updateItems().apply(request)).header.status shouldEqual OK
-      verify(dao).deleteBesides(List(categoryId))
     }
 
     "updates items" in {
       val categoryId = 1
       val categoryName = "test"
+      (dao.deleteBesides _).expects(List(categoryId)).returns(Future(1))
+      (dao.updateName _).expects(categoryId, categoryName).returns(Future(1))
+      (dao.sorted _).expects().returns(Future(List()))
+
       val request: Request[JsValue] = authorizedRequest.withBody[JsValue](Json.arr(categoryJson(categoryId, categoryName)))
       await(controller.updateItems().apply(request)).header.status shouldEqual OK
-      verify(dao).updateName(categoryId, categoryName)
     }
   }
 
