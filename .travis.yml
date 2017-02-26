@@ -6,6 +6,7 @@ cache:
     - $HOME/.m2/repository
     - $HOME/.sbt
     - $HOME/.ivy2
+    - $HOME/.npm
 
 language: scala
 
@@ -15,6 +16,7 @@ script:
 
   # Trick to avoid unnecessary cache updates
   - find $HOME/.sbt -name "*.lock" | xargs rm
+  - find $HOME/.npm -name "*.lock" | xargs rm
 
   # js tests
   - runJsTests.sh
