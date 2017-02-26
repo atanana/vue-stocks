@@ -80,17 +80,7 @@ class CategoriesControllerTest extends WordSpecLike with MockFactory with Before
       await(controller.updateItems().apply(request)).header.status shouldEqual OK
     }
 
-    "deletes items" in {
-      val categoryId = 1
-      (dao.deleteBesides _).expects(List(categoryId)).returns(Future(1))
-      (dao.updateName _).expects(*, *).returns(Future(1))
-      (dao.sorted _).expects().returns(Future(List()))
-
-      val request: Request[JsValue] = authorizedRequest.withBody[JsValue](Json.arr(categoryJson(categoryId, "test")))
-      await(controller.updateItems().apply(request)).header.status shouldEqual OK
-    }
-
-    "updates items" in {
+    "deletes and updates items" in {
       val categoryId = 1
       val categoryName = "test"
       (dao.deleteBesides _).expects(List(categoryId)).returns(Future(1))

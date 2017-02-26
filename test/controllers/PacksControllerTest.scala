@@ -2,12 +2,9 @@ package controllers
 
 import controllers.AuthorizationUtility.authorizedRequest
 import models.db.Pack
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.{spy, verify, when}
-import org.scalatest.mockito.MockitoSugar
+import org.scalamock.scalatest.MockFactory
 import org.scalatest.{BeforeAndAfter, Matchers, WordSpecLike}
 import play.api.libs.json.{JsObject, JsValue, Json}
-import play.api.mvc.BodyParsers.parse
 import play.api.mvc.Request
 import play.api.mvc.Results._
 import play.api.test.FakeRequest
@@ -17,34 +14,28 @@ import services.db.{ClientPack, PacksDao}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class PacksControllerTest extends WordSpecLike with MockitoSugar with BeforeAndAfter with Matchers {
+class PacksControllerTest extends WordSpecLike with MockFactory with BeforeAndAfter with Matchers {
   var controller: PacksController = _
-  var authorizedAction: AuthorizedAction = _
   var dao: PacksDao = _
 
   before {
     dao = mock[PacksDao]
-    authorizedAction = spy(new AuthorizedAction(AuthorizationUtility.config))
+    val authorizedAction = new AuthorizedAction(AuthorizationUtility.config)
     controller = new PacksController(authorizedAction, dao)
-
-    when(dao.deleteBesides(any())).thenReturn(Future(1))
-    when(dao.updateName(any(), any())).thenReturn(Future(1))
-    when(dao.createItem(any())).thenReturn(Future(1))
-    when(dao.sorted()).thenReturn(Future(List()))
   }
 
   "PacksController#allItems" should {
     "check authorization" in {
-      controller.allItems().apply(FakeRequest())
-      verify(authorizedAction).async(parse.json)(any())
+      status(controller.allItems().apply(FakeRequest())) shouldBe SEE_OTHER
     }
 
     "returns valid data" in {
-      when(dao.sorted()).thenReturn(Future(List(
+      (dao.sorted _).expects().returns(Future(List(
         Pack(1, "test 1"),
         Pack(2, "test 2"),
         Pack(3, "test 3")
       )))
+
       await(controller.allItems.apply(authorizedRequest)) shouldEqual Ok(Json.arr(
         packJson(1, "test 1"),
         packJson(2, "test 2"),
@@ -55,8 +46,7 @@ class PacksControllerTest extends WordSpecLike with MockitoSugar with BeforeAndA
 
   "PacksController#updateItems" should {
     "check authorization" in {
-      controller.updateItems().apply(FakeRequest())
-      verify(authorizedAction).async(parse.json)(any())
+      status(controller.updateItems().apply(AuthorizationUtility.unauthorizedRequestWithJson)) shouldBe SEE_OTHER
     }
 
     "return bad request due to incorrect json" in {
@@ -66,11 +56,14 @@ class PacksControllerTest extends WordSpecLike with MockitoSugar with BeforeAndA
 
     "returns all items" in {
       val request: Request[JsValue] = authorizedRequest.withBody[JsValue](Json.arr())
-      when(dao.sorted()).thenReturn(Future(List(
+
+      (dao.deleteBesides _).expects(List()).returns(Future(1))
+      (dao.sorted _).expects().returns(Future(List(
         Pack(1, "test 1"),
         Pack(2, "test 2"),
         Pack(3, "test 3")
       )))
+
       await(controller.updateItems().apply(request)) shouldEqual Ok(Json.arr(
         packJson(1, "test 1"),
         packJson(2, "test 2"),
@@ -81,23 +74,24 @@ class PacksControllerTest extends WordSpecLike with MockitoSugar with BeforeAndA
     "creates new items" in {
       val packName = "test 1"
       val request: Request[JsValue] = authorizedRequest.withBody[JsValue](Json.arr(newPackJson(packName)))
+
+      (dao.deleteBesides _).expects(List()).returns(Future(1))
+      (dao.createItem _).expects(ClientPack(None, packName)).returns(Future(1))
+      (dao.sorted _).expects().returns(Future(List()))
+
       await(controller.updateItems().apply(request)).header.status shouldEqual OK
-      verify(dao).createItem(ClientPack(None, packName))
     }
 
-    "deletes items" in {
-      val categoryId = 1
-      val request: Request[JsValue] = authorizedRequest.withBody[JsValue](Json.arr(packJson(categoryId, "test")))
-      await(controller.updateItems().apply(request)).header.status shouldEqual OK
-      verify(dao).deleteBesides(List(categoryId))
-    }
-
-    "updates items" in {
+    "deletes and updates items" in {
       val packId = 1
-      val packName = "test"
-      val request: Request[JsValue] = authorizedRequest.withBody[JsValue](Json.arr(packJson(packId, packName)))
+      val name = "test"
+      val request: Request[JsValue] = authorizedRequest.withBody[JsValue](Json.arr(packJson(packId, name)))
+
+      (dao.deleteBesides _).expects(List(packId)).returns(Future(1))
+      (dao.updateName _).expects(packId, name).returns(Future(1))
+      (dao.sorted _).expects().returns(Future(List()))
+
       await(controller.updateItems().apply(request)).header.status shouldEqual OK
-      verify(dao).updateName(packId, packName)
     }
   }
 
