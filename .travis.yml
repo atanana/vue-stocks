@@ -17,7 +17,7 @@ script:
   - find $HOME/.sbt -name "*.lock" | xargs rm
 
   # js tests
-  - cd vue; npm run test
+  - runJsTests.sh
 
 scala:
   - 2.11.7
