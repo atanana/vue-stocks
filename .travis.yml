@@ -18,6 +18,7 @@ script:
   - find $HOME/.sbt -name "*.lock" | xargs rm
 
   # js tests
+  - nvm use $NODE_VERSION
   - cd vue && npm run test
 
 scala:
@@ -29,7 +30,11 @@ jdk:
 node_js:
   - "7.2.0"
 
+env:
+  - NODE_VERSION=0.12
+
 install:
+  - nvm install $NODE_VERSION
   - npm install -g npm@latest;cd vue;npm install;cd ..
 
 notifications:
