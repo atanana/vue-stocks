@@ -6,7 +6,7 @@ cache:
     - $HOME/.m2/repository
     - $HOME/.sbt
     - $HOME/.ivy2
-#    - $HOME/.npm
+    - $HOME/.npm
 
 language: scala
 
@@ -18,7 +18,7 @@ script:
   - find $HOME/.sbt -name "*.lock" | xargs rm
 
   # js tests
-  - ./runJsTests.sh
+  - cd vue && npm run test
 
 scala:
   - 2.11.7
