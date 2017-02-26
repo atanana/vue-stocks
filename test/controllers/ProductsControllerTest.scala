@@ -2,12 +2,9 @@ package controllers
 
 import controllers.AuthorizationUtility.authorizedRequest
 import models.db.Product
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.{spy, verify, when}
-import org.scalatest.mockito.MockitoSugar
+import org.scalamock.scalatest.MockFactory
 import org.scalatest.{BeforeAndAfter, Matchers, WordSpecLike}
 import play.api.libs.json._
-import play.api.mvc.BodyParsers.parse
 import play.api.mvc.Request
 import play.api.mvc.Results._
 import play.api.test.Helpers._
@@ -17,21 +14,19 @@ import services.db.{ClientProduct, ProductsDao}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class ProductsControllerTest extends WordSpecLike with MockitoSugar with BeforeAndAfter with Matchers {
+class ProductsControllerTest extends WordSpecLike with MockFactory with BeforeAndAfter with Matchers {
   var controller: ProductsController = _
-  var authorizedAction: AuthorizedAction = _
-  var productsDao: ProductsDao = _
+  var dao: ProductsDao = _
 
   before {
-    productsDao = mock[ProductsDao]
-    authorizedAction = spy(new AuthorizedAction(AuthorizationUtility.config))
-    controller = new ProductsController(authorizedAction, productsDao)
+    dao = mock[ProductsDao]
+    val authorizedAction = new AuthorizedAction(AuthorizationUtility.config)
+    controller = new ProductsController(authorizedAction, dao)
   }
 
   "ProductsController#addProduct" should {
     "check authorization" in {
-      controller.addProduct().apply(FakeRequest())
-      verify(authorizedAction).async(parse.json)(any())
+      status(controller.addProduct().apply(AuthorizationUtility.unauthorizedRequestWithJson)) shouldBe SEE_OTHER
     }
 
     "return bad request due to no json" in {
@@ -49,20 +44,16 @@ class ProductsControllerTest extends WordSpecLike with MockitoSugar with BeforeA
         "packId" -> packId
       )
       val request: Request[JsValue] = authorizedRequest.withBody[JsValue](payload)
-      when(productsDao.allProducts).thenReturn(Future(List()))
-      when(productsDao.addProduct(any())).thenReturn(Future(1))
+      (dao.allProducts _).expects().returns(Future(List()))
+      (dao.addProduct _).expects(ClientProduct(categoryId, productTypeId, packId)).returns(Future(1))
 
       await(controller.addProduct().apply(request)) shouldEqual Ok(JsArray())
-
-      verify(productsDao).addProduct(ClientProduct(categoryId, productTypeId, packId))
-      verify(productsDao).allProducts
     }
   }
 
   "ProductsController#deleteProduct" should {
     "check authorization" in {
-      controller.deleteProduct().apply(FakeRequest())
-      verify(authorizedAction).async(parse.json)(any())
+      status(controller.deleteProduct().apply(AuthorizationUtility.unauthorizedRequestWithJson)) shouldBe SEE_OTHER
     }
 
     "return bad request due to no json" in {
@@ -80,24 +71,20 @@ class ProductsControllerTest extends WordSpecLike with MockitoSugar with BeforeA
         "packId" -> packId
       )
       val request: Request[JsValue] = authorizedRequest.withBody[JsValue](payload)
-      when(productsDao.allProducts).thenReturn(Future(List()))
-      when(productsDao.deleteProduct(any())).thenReturn(Future(1))
+      (dao.allProducts _).expects().returns(Future(List()))
+      (dao.deleteProduct _).expects(ClientProduct(categoryId, productTypeId, packId)).returns(Future(1))
 
       await(controller.deleteProduct().apply(request)) shouldEqual Ok(JsArray())
-
-      verify(productsDao).deleteProduct(ClientProduct(categoryId, productTypeId, packId))
-      verify(productsDao).allProducts
     }
   }
 
   "ProductsController#allProducts" should {
     "check authorization" in {
-      controller.allProducts().apply(FakeRequest())
-      verify(authorizedAction).async(parse.json)(any())
+      status(controller.allProducts().apply(FakeRequest())) shouldBe SEE_OTHER
     }
 
     "correct group products" in {
-      when(productsDao.allProducts).thenReturn(Future(List(
+      (dao.allProducts _).expects().returns(Future(List(
         Product(1, 1, 1, 1),
         Product(2, 1, 2, 1),
         Product(3, 2, 2, 2),
@@ -117,7 +104,7 @@ class ProductsControllerTest extends WordSpecLike with MockitoSugar with BeforeA
     }
 
     "correct group product packs" in {
-      when(productsDao.allProducts).thenReturn(Future(List(
+      (dao.allProducts _).expects().returns(Future(List(
         Product(1, 1, 1, 1),
         Product(2, 1, 1, 2),
         Product(3, 1, 1, 1)

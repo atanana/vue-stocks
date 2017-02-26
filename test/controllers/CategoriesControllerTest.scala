@@ -17,12 +17,11 @@ import scala.concurrent.Future
 
 class CategoriesControllerTest extends WordSpecLike with MockFactory with BeforeAndAfter with Matchers {
   var controller: CategoriesController = _
-  var authorizedAction: AuthorizedAction = _
   var dao: CategoriesDao = _
 
   before {
     dao = mock[CategoriesDao]
-    authorizedAction = new AuthorizedAction(AuthorizationUtility.config)
+    val authorizedAction = new AuthorizedAction(AuthorizationUtility.config)
     controller = new CategoriesController(authorizedAction, dao)
   }
 
@@ -47,8 +46,7 @@ class CategoriesControllerTest extends WordSpecLike with MockFactory with Before
 
   "CategoriesController#updateItems" should {
     "check authorization" in {
-      val request: Request[JsValue] = FakeRequest().withBody[JsValue](Json.obj())
-      status(controller.updateItems().apply(request)) shouldBe SEE_OTHER
+      status(controller.updateItems().apply(AuthorizationUtility.unauthorizedRequestWithJson)) shouldBe SEE_OTHER
     }
 
     "return bad request due to incorrect json" in {

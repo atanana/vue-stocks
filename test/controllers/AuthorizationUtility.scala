@@ -1,6 +1,7 @@
 package controllers
 
 import org.mockito.Mockito.{mock, when}
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsEmpty, Cookie}
 import play.api.test.FakeRequest
 import services.ConfigurationService
@@ -20,4 +21,6 @@ object AuthorizationUtility {
     val cookie = Cookie(AuthorizedAction.TOKEN_KEY, token, Some(AuthorizationController.SESSION_DURATION))
     FakeRequest().withCookies(cookie)
   }
+
+  def unauthorizedRequestWithJson: FakeRequest[JsValue] = FakeRequest().withBody[JsValue](Json.obj())
 }
