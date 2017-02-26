@@ -16,7 +16,7 @@ script:
 
   # Trick to avoid unnecessary cache updates
   - find $HOME/.sbt -name "*.lock" | xargs rm
-  - find $HOME/.npm -name "*.lock" | xargs rm
+#  - find $HOME/.npm -name "*.lock" | xargs rm
 
   # js tests
   - runJsTests.sh
@@ -30,7 +30,9 @@ jdk:
 node_js:
   - "7.2.0"
 
-install: "cd vue;npm install"
+install:
+  - find $HOME/.npm -name "*.lock" | xargs rm
+  - cd vue;npm install
 
 notifications:
   email:
