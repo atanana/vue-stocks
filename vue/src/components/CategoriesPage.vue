@@ -3,7 +3,8 @@
     :items="categories"
     @saveItems="save"
     newItemPlaceholder="Название категории"
-    newItemLabel="Добавить категорию"/>
+    newItemLabel="Добавить категорию"
+    ref="page"/>
 </template>
 
 <script>

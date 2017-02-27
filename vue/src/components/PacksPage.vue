@@ -3,7 +3,8 @@
     :items="packs"
     @saveItems="save"
     newItemPlaceholder="Название упаковки"
-    newItemLabel="Добавить упаковку"/>
+    newItemLabel="Добавить упаковку"
+    ref="page"/>
 </template>
 
 <script>

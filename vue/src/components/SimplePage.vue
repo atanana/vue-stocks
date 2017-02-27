@@ -3,6 +3,7 @@
     <SimpleList
       :items="itemsData"
       :newItemLabel="newItemLabel"
+      :newItemPlaceholder="newItemPlaceholder"
       ref="items"
     />
     <SaveButton ref="saveButton" @save="$emit('saveItems', itemsData)"/>
@@ -15,7 +16,7 @@
   import {copyData} from "utility/objectUtils";
 
   export default {
-    props: ['items', 'newItemLabel'],
+    props: ['items', 'newItemPlaceholder', 'newItemLabel'],
     components: {
       SimpleList,
       SaveButton
