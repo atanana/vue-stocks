@@ -69,7 +69,7 @@ describe('actions.js', () => {
     serverMethod.call(server, path, newData).reply(200, data);
     const spy = sinon.spy();
 
-    method.call(actions, {commit: spy}, newData);
+    method({commit: spy}, newData);
 
     setTimeout(() => {
       expect(spy).to.calledWith(action, data);
@@ -87,7 +87,7 @@ describe('actions.js', () => {
     };
     server.onGet(path).reply(200, data);
     const spy = sinon.spy();
-    method.call(actions, {commit: spy});
+    method({commit: spy});
 
     setTimeout(() => {
       expect(spy).to.calledWith(action, data);
