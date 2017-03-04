@@ -13,7 +13,12 @@ export const packsMap = store => {
 };
 
 export const groupedProducts = (store, getters) => categoryId => {
-  let products = store.products
+  let products = store.products;
+  if (categoryId) {
+    products = products.filter(product => product.categoryId === categoryId);
+  }
+
+  return products
     .map(product => ({
       productType: getters.productTypesMap[product.productTypeId],
       category: getters.categoriesMap[product.categoryId],
@@ -21,30 +26,25 @@ export const groupedProducts = (store, getters) => categoryId => {
         pack: getters.packsMap[pack.packId],
         quantity: pack.quantity
       }))
-    }));
+    }))
+    .sort((left, right) => {
+      let result = 0;
+      if (left.productType && right.productType && left.category && right.category) {
+        const leftProduct = left.productType.name;
+        const rightProduct = right.productType.name;
 
-  if (categoryId) {
-    products = products.filter(product => product.category.id === categoryId);
-  }
+        if (leftProduct !== rightProduct) {
+          result = leftProduct < rightProduct ? -1 : 1;
+        } else {
+          const leftCategory = left.category.name;
+          const rightCategory = right.category.name;
 
-  return products.sort((left, right) => {
-    let result = 0;
-    if (left.productType && right.productType && left.category && right.category) {
-      const leftProduct = left.productType.name;
-      const rightProduct = right.productType.name;
-
-      if (leftProduct !== rightProduct) {
-        result = leftProduct < rightProduct ? -1 : 1;
-      } else {
-        const leftCategory = left.category.name;
-        const rightCategory = right.category.name;
-
-        if (leftCategory !== rightCategory) {
-          result = leftCategory < rightCategory ? -1 : 1;
+          if (leftCategory !== rightCategory) {
+            result = leftCategory < rightCategory ? -1 : 1;
+          }
         }
       }
-    }
 
-    return result;
-  });
+      return result;
+    });
 };
