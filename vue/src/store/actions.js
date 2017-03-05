@@ -35,6 +35,12 @@ export default {
         commit('setProductTypes', response.data);
       });
   }),
+  loadProductLogs({commit}) {
+    axios.get('/api/product-logs/all')
+      .then(response => {
+        commit('setProductLogs', response.data);
+      });
+  },
   updateCategories({commit}, categories) {
     axios.put('/api/categories/update', categories)
       .then(response => {

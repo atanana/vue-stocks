@@ -17,6 +17,10 @@ describe('mutations.js', () => {
     checkSet('productTypes', mutations.setProductTypes);
   });
 
+  it('should set product logs', () => {
+    checkSet('productLogs', mutations.setProductLogs);
+  });
+
   function checkSet(property, method) {
     const state = {};
     const items = [

@@ -1,4 +1,5 @@
 import {toMap} from "utility/objectUtils";
+import moment from "moment";
 
 export const categoriesMap = store => {
   return toMap(store.categories);
@@ -47,4 +48,14 @@ export const groupedProducts = (store, getters) => categoryId => {
 
       return result;
     });
+};
+
+export const productLogs = (store, getters) => {
+  return store.productLogs.map(logEntry => ({
+    productType: getters.productTypesMap[logEntry.productTypeId],
+    category: getters.categoriesMap[logEntry.categoryId],
+    pack: getters.packsMap[logEntry.packId],
+    action: logEntry.action,
+    time: moment(logEntry.time)
+  }));
 };

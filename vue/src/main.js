@@ -6,12 +6,17 @@ import ProductsPage from "components/products/ProductsPage";
 import CategoriesPage from "components/CategoriesPage";
 import PacksPage from "components/PacksPage";
 import ProductTypesPage from "components/product-types/ProductTypesPage";
+import ProductLogsPage from "components/ProductLogsPage";
 import store from "store/store";
+import moment from "moment";
+
+moment.locale('ru');
 
 Vue.use(VueRouter);
 
 const routes = [
   {path: '/products', component: ProductsPage},
+  {path: '/products-logs', component: ProductLogsPage},
   {path: '/categories', component: CategoriesPage},
   {path: '/packs', component: PacksPage},
   {path: '/product-types', component: ProductTypesPage},

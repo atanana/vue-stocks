@@ -20,7 +20,7 @@ describe('ProductTypesPage.vue', () => {
     }, store);
   }
 
-  it('should data on create', () => {
+  it('should load data on create', () => {
     const store = createStore({});
     const storeMock = sinon.mock(store);
     storeMock.expects('dispatch').withExactArgs('loadProductTypes');

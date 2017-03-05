@@ -11,7 +11,8 @@ export default new Vuex.Store({
     products: [],
     categories: [],
     packs: [],
-    productTypes: []
+    productTypes: [],
+    productLogs: []
   },
   mutations,
   actions,

@@ -26,7 +26,6 @@
 <script>
   import ProductsList from 'components/products/ProductsList';
   import AddProductPopup from 'components/products/AddProductPopup';
-  import {toMap} from 'utility/objectUtils';
 
   export default {
     components: {

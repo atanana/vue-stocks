@@ -1,5 +1,6 @@
 import * as getters from "src/store/getters";
 import {toMap} from "src/utility/objectUtils";
+import moment from "moment";
 
 describe('getters.js', () => {
   it('should get correct categories data', () => {
@@ -112,6 +113,37 @@ describe('getters.js', () => {
         packs: []
       }
     ]);
+  });
+
+  it('should map product logs', () => {
+    const store = {
+      productLogs: [{
+        productTypeId: 1,
+        categoryId: 2,
+        packId: 3,
+        action: 'test action',
+        time: 123
+      }]
+    };
+    const mockGetters = {
+      productTypesMap: {
+        1: {name: 'product type 1'}
+      },
+      categoriesMap: {
+        2: {name: 'category 2'}
+      },
+      packsMap: {
+        3: {name: 'pack 3'}
+      }
+    };
+
+    expect(getters.productLogs(store, mockGetters)).to.eql([{
+      productType: {name: 'product type 1'},
+      category: {name: 'category 2'},
+      pack: {name: 'pack 3'},
+      action: 'test action',
+      time: moment(123)
+    }]);
   });
 
   function checkSimpleGetter(property, method) {

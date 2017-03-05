@@ -45,6 +45,24 @@ describe('actions.js', () => {
     checkPost('/api/products/delete', actions.deleteProduct, 'setProducts', done);
   });
 
+  it('should load product logs', done => {
+    const data = {
+      items: [
+        {name: 'item 1'},
+        {name: 'item 2'},
+        {name: 'item 3'}
+      ]
+    };
+    server.onGet('/api/product-logs/all').reply(200, data);
+    const spy = sinon.spy();
+    actions.loadProductLogs({commit: spy});
+
+    setTimeout(() => {
+      expect(spy).to.calledWith('setProductLogs', data);
+      done();
+    }, 0);
+  });
+
   function checkUpdate(path, method, action, done) {
     checkMethod(path, method, action, done, server.onPut);
   }
