@@ -9,7 +9,7 @@ import play.api.mvc.Request
 import play.api.mvc.Results._
 import play.api.test.Helpers._
 import play.api.test._
-import services.db.{ClientProduct, ProductsDao}
+import services.db.{ClientProduct, ProductsDao, ProductsLogsDao}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -17,11 +17,13 @@ import scala.concurrent.Future
 class ProductsControllerTest extends WordSpecLike with MockFactory with BeforeAndAfter with Matchers {
   var controller: ProductsController = _
   var dao: ProductsDao = _
+  var logsDao: ProductsLogsDao = _
 
   before {
     dao = mock[ProductsDao]
+    logsDao = mock[ProductsLogsDao]
     val authorizedAction = new AuthorizedAction(AuthorizationUtility.config)
-    controller = new ProductsController(authorizedAction, dao)
+    controller = new ProductsController(authorizedAction, dao, logsDao)
   }
 
   "ProductsController#addProduct" should {
@@ -44,10 +46,30 @@ class ProductsControllerTest extends WordSpecLike with MockFactory with BeforeAn
         "packId" -> packId
       )
       val request: Request[JsValue] = authorizedRequest.withBody[JsValue](payload)
+
+      (logsDao.addProduct _).expects(*).returns(Future(1))
       (dao.allProducts _).expects().returns(Future(List()))
       (dao.addProduct _).expects(ClientProduct(categoryId, productTypeId, packId)).returns(Future(1))
 
       await(controller.addProduct().apply(request)) shouldEqual Ok(JsArray())
+    }
+
+    "log add product" in {
+      val categoryId = 12
+      val productTypeId = 123
+      val packId = 1234
+      val payload = Json.obj(
+        "categoryId" -> categoryId,
+        "productTypeId" -> productTypeId,
+        "packId" -> packId
+      )
+      val request: Request[JsValue] = authorizedRequest.withBody[JsValue](payload)
+
+      (logsDao.addProduct _).expects(ClientProduct(categoryId, productTypeId, packId)).returns(Future(1))
+      (dao.allProducts _).expects().returns(Future(List()))
+      (dao.addProduct _).expects(*).returns(Future(1))
+
+      await(controller.addProduct().apply(request))
     }
   }
 
@@ -71,10 +93,30 @@ class ProductsControllerTest extends WordSpecLike with MockFactory with BeforeAn
         "packId" -> packId
       )
       val request: Request[JsValue] = authorizedRequest.withBody[JsValue](payload)
+
+      (logsDao.deleteProduct _).expects(*).returns(Future(1))
       (dao.allProducts _).expects().returns(Future(List()))
       (dao.deleteProduct _).expects(ClientProduct(categoryId, productTypeId, packId)).returns(Future(1))
 
       await(controller.deleteProduct().apply(request)) shouldEqual Ok(JsArray())
+    }
+
+    "log delete product" in {
+      val categoryId = 12
+      val productTypeId = 123
+      val packId = 1234
+      val payload = Json.obj(
+        "categoryId" -> categoryId,
+        "productTypeId" -> productTypeId,
+        "packId" -> packId
+      )
+      val request: Request[JsValue] = authorizedRequest.withBody[JsValue](payload)
+
+      (logsDao.deleteProduct _).expects(ClientProduct(categoryId, productTypeId, packId)).returns(Future(1))
+      (dao.allProducts _).expects().returns(Future(List()))
+      (dao.deleteProduct _).expects(*).returns(Future(1))
+
+      await(controller.deleteProduct().apply(request))
     }
   }
 

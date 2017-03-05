@@ -15,6 +15,8 @@ PUT         /api/packs/update                controllers.PacksController.updateI
 GET         /api/product-types/all           controllers.ProductTypesController.allItems
 PUT         /api/product-types/update        controllers.ProductTypesController.updateItems
 
+GET         /api/product-logs/all            controllers.ProductLogController.allLogs
+
 GET         /login                           controllers.AuthorizationController.login
 POST        /login                           controllers.AuthorizationController.doLogin
 

@@ -7,13 +7,13 @@ import play.api.Logger
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import play.api.mvc._
-import services.db.{ClientProduct, ProductsDao}
+import services.db.{ClientProduct, ProductsDao, ProductsLogsDao}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
 
-class ProductsController @Inject()(authorizedAction: AuthorizedAction, val productsDao: ProductsDao) extends Controller {
+class ProductsController @Inject()(authorizedAction: AuthorizedAction, val productsDao: ProductsDao, val logsDao: ProductsLogsDao) extends Controller {
   private implicit val productsWrites: Writes[Product] = (
     (JsPath \ "id").write[Int] and
       (JsPath \ "productTypeId").write[Int] and
@@ -69,9 +69,13 @@ class ProductsController @Inject()(authorizedAction: AuthorizedAction, val produ
       (JsPath \ "packId").read[Int]
     ) (ClientProduct.apply _)
 
-  def addProduct(): Action[JsValue] = actionOnProduct(productsDao.addProduct)
+  def addProduct(): Action[JsValue] = actionOnProduct(product => {
+    productsDao.addProduct(product).flatMap(_ => logsDao.addProduct(product))
+  })
 
-  def deleteProduct(): Action[JsValue] = actionOnProduct(productsDao.deleteProduct)
+  def deleteProduct(): Action[JsValue] = actionOnProduct(product => {
+    productsDao.deleteProduct(product).flatMap(_ => logsDao.deleteProduct(product))
+  })
 
   private def actionOnProduct(action: (ClientProduct) => Future[Int]): Action[JsValue] = authorizedAction.async(parse.json) { request =>
     Try(request.body.as[ClientProduct]) match {

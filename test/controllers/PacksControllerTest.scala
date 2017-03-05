@@ -82,17 +82,29 @@ class PacksControllerTest extends WordSpecLike with MockFactory with BeforeAndAf
       await(controller.updateItems().apply(request)).header.status shouldEqual OK
     }
 
-    "deletes and updates items" in {
+    "deletes items" in {
       val packId = 1
-      val name = "test"
-      val request: Request[JsValue] = authorizedRequest.withBody[JsValue](Json.arr(packJson(packId, name)))
 
       (dao.deleteBesides _).expects(List(packId)).returns(Future(1))
+      (dao.updateName _).expects(*, *).returns(Future(1))
+      (dao.sorted _).expects().returns(Future(List()))
+
+      val request: Request[JsValue] = authorizedRequest.withBody[JsValue](Json.arr(packJson(packId, "test")))
+      await(controller.updateItems().apply(request)).header.status shouldEqual OK
+    }
+
+    "updates items" in {
+      val packId = 1
+      val name = "test"
+
+      (dao.deleteBesides _).expects(*).returns(Future(1))
       (dao.updateName _).expects(packId, name).returns(Future(1))
       (dao.sorted _).expects().returns(Future(List()))
 
+      val request: Request[JsValue] = authorizedRequest.withBody[JsValue](Json.arr(packJson(packId, name)))
       await(controller.updateItems().apply(request)).header.status shouldEqual OK
     }
+
   }
 
   private def newPackJson(name: String): JsObject = {
