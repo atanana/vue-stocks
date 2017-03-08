@@ -154,4 +154,12 @@ describe('ProductsPage.vue', () => {
       done();
     });
   });
+
+  it('should render correct history link', () => {
+    const vm = createPage(createStore({}));
+    const historyLink = vm.$refs.history;
+
+    expect(historyLink.$el).to.have.class('is-pulled-right');
+    expect(historyLink.link).to.equal('/products-logs');
+  });
 });

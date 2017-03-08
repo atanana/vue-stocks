@@ -6,6 +6,8 @@
       :packs="packs"
       ref="addProductPopup"
     />
+    <HistoryLink class="is-pulled-right" link="/products-logs" ref="history"/>
+    <div class="is-clearfix"></div>
     <div class="tabs is-boxed is-fullwidth">
       <ul>
         <li v-for="category in availableCategories"
@@ -26,11 +28,13 @@
 <script>
   import ProductsList from 'components/products/ProductsList';
   import AddProductPopup from 'components/products/AddProductPopup';
+  import HistoryLink from 'components/buttons/HistoryLink';
 
   export default {
     components: {
       ProductsList,
-      AddProductPopup
+      AddProductPopup,
+      HistoryLink
     },
     computed: {
       products() {
