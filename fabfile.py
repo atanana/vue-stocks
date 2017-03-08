@@ -8,7 +8,7 @@ def deploy():
     local('activator clean dist')
     with cd('vue-stocks'):
         sudo('systemctl stop vue-stocks')
-        run('rm -rf vue_stocks-1.0*')
+        sudo('rm -rf vue_stocks-1.0*')
         put('target/universal/vue_stocks-1.0.zip', 'vue_stocks-1.0.zip')
         run('unzip vue_stocks-1.0.zip')
         sudo('systemctl start vue-stocks')
