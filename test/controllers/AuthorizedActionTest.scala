@@ -1,13 +1,12 @@
 package controllers
 
-import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfter, Matchers, WordSpecLike}
 import play.api.mvc.Results._
 import play.api.test.Helpers._
 import play.api.test._
 import services.ConfigurationService
 
-class AuthorizedActionTest extends WordSpecLike with BeforeAndAfter with MockitoSugar with Matchers {
+class AuthorizedActionTest extends WordSpecLike with BeforeAndAfter with Matchers {
   val config: ConfigurationService = AuthorizationUtility.config
   var action: AuthorizedAction = _
 

@@ -17,7 +17,6 @@ libraryDependencies ++= Seq(
   "org.mindrot" % "jbcrypt" % "0.3m",
   specs2 % Test,
   "org.scalatest" % "scalatest_2.11" % "3.0.1" % "test",
-  "org.mockito" % "mockito-core" % "2.7.11" % "test",
   "org.scalamock" %% "scalamock-scalatest-support" % "3.5.0" % "test",
   "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % "test"
 )
