@@ -24,7 +24,7 @@ class ProductTypesControllerTest extends WordSpecLike with MockFactory with Befo
     controller = new ProductTypesController(authorizedAction, dao)
   }
 
-  "PacksController#allItems" should {
+  "ProductTypesController#allItems" should {
     "check authorization" in {
       status(controller.allItems().apply(FakeRequest())) shouldBe SEE_OTHER
     }
@@ -44,7 +44,7 @@ class ProductTypesControllerTest extends WordSpecLike with MockFactory with Befo
     }
   }
 
-  "PacksController#updateItems" should {
+  "ProductTypesController#updateItems" should {
     "check authorization" in {
       status(controller.updateItems().apply(AuthorizationUtility.unauthorizedRequestWithJson)) shouldBe SEE_OTHER
     }
@@ -56,7 +56,7 @@ class ProductTypesControllerTest extends WordSpecLike with MockFactory with Befo
 
     "returns all items" in {
       val request: Request[JsValue] = authorizedRequest.withBody[JsValue](Json.arr())
-      (dao.deleteBesides _).expects(List()).returns(Future(1))
+      (dao.deleteBesides _).expects(*).returns(Future(1))
       (dao.sorted _).expects().returns(Future(List(
         ProductType(1, "test 1", Some(1)),
         ProductType(2, "test 2", None),
@@ -71,17 +71,17 @@ class ProductTypesControllerTest extends WordSpecLike with MockFactory with Befo
     }
 
     "creates new items" in {
-      val packName1 = "test 1"
-      val packName2 = "test 2"
+      val productTypeName1 = "test 1"
+      val productTypeName2 = "test 2"
       val categoryId = 1
       val request: Request[JsValue] = authorizedRequest.withBody[JsValue](Json.arr(
-        newProductTypeJson(packName1, Some(categoryId)),
-        newProductTypeJson(packName2, None)
+        newProductTypeJson(productTypeName1, Some(categoryId)),
+        newProductTypeJson(productTypeName2, None)
       ))
 
-      (dao.deleteBesides _).expects(List()).returns(Future(1))
-      (dao.createItem _).expects(ClientProductType(None, packName1, Some(categoryId))).returns(Future(1))
-      (dao.createItem _).expects(ClientProductType(None, packName2, None)).returns(Future(1))
+      (dao.deleteBesides _).expects(*).returns(Future(1))
+      (dao.createItem _).expects(ClientProductType(None, productTypeName1, Some(categoryId))).returns(Future(1))
+      (dao.createItem _).expects(ClientProductType(None, productTypeName2, None)).returns(Future(1))
       (dao.sorted _).expects().returns(Future(List()))
 
       await(controller.updateItems().apply(request)).header.status shouldEqual OK
@@ -93,7 +93,7 @@ class ProductTypesControllerTest extends WordSpecLike with MockFactory with Befo
       val request: Request[JsValue] = authorizedRequest.withBody[JsValue](Json.arr(productTypeJson(productTypeId, name, None)))
 
       (dao.deleteBesides _).expects(List(productTypeId)).returns(Future(1))
-      (dao.updateProductType _).expects(ClientProductType(Some(productTypeId), name, None), productTypeId).returns(Future(1))
+      (dao.updateProductType _).expects(*, *).returns(Future(1))
       (dao.sorted _).expects().returns(Future(List()))
 
       await(controller.updateItems().apply(request)).header.status shouldEqual OK
@@ -110,7 +110,7 @@ class ProductTypesControllerTest extends WordSpecLike with MockFactory with Befo
         productTypeJson(packId2, packName2, Some(categoryId2))
       ))
 
-      (dao.deleteBesides _).expects(List(packId1, packId2)).returns(Future(1))
+      (dao.deleteBesides _).expects(*).returns(Future(1))
       (dao.updateProductType _).expects(ClientProductType(Some(packId1), packName1, None), packId1).returns(Future(1))
       (dao.updateProductType _).expects(ClientProductType(Some(packId2), packName2, Some(categoryId2)), packId2).returns(Future(1))
       (dao.sorted _).expects().returns(Future(List()))

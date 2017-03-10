@@ -3,7 +3,7 @@ package models.db
 import java.sql.Timestamp
 
 import models.db.ProductLogAction.ProductLogAction
-import org.joda.time.{DateTime, DateTimeZone}
+import org.joda.time.{DateTime, DateTimeZone, LocalDate}
 import slick.ast.BaseTypedType
 import slick.driver.MySQLDriver.api._
 import slick.jdbc.JdbcType
@@ -14,6 +14,11 @@ object CustomColumns {
     dateTime => new Timestamp(dateTime.withZone(DateTimeZone.UTC).getMillis),
     timestamp => new DateTime(timestamp.getTime, DateTimeZone.UTC)
   )
+
+  val localDateColumn: JdbcType[LocalDate] with BaseTypedType[LocalDate] = MappedColumnType.base[LocalDate, Timestamp](
+    localDate => new Timestamp(localDate.toDateTimeAtStartOfDay(DateTimeZone.UTC).getMillis),
+    timestamp => new DateTime(timestamp.getTime, DateTimeZone.UTC).toLocalDate
+  )
 }
 
 case class Category(id: Int, name: String)
@@ -23,6 +28,8 @@ case class Pack(id: Int, name: String)
 case class ProductType(id: Int, name: String, categoryId: Option[Int])
 
 case class Product(id: Int, productTypeId: Int, categoryId: Int, packId: Int)
+
+case class MenuItem(id: Int, name: String, date: LocalDate)
 
 object ProductLogAction extends Enumeration {
   type ProductLogAction = Value
@@ -64,6 +71,18 @@ class ProductTypes(tag: Tag) extends Table[ProductType](tag, "product_types") wi
   def categoryId: Rep[Option[Int]] = column[Option[Int]]("category_id")
 
   def * : ProvenShape[ProductType] = (id, name, categoryId) <> (ProductType.tupled, ProductType.unapply)
+}
+
+class MenuItems(tag: Tag) extends Table[MenuItem](tag, "menu_items") with WithNameColumn with WithIdColumn {
+  private implicit val localDateColumn = CustomColumns.localDateColumn
+
+  def id: Rep[Int] = column[Int]("id", O.PrimaryKey, O.AutoInc)
+
+  def name: Rep[String] = column[String]("name")
+
+  def date: Rep[LocalDate] = column[LocalDate]("date")
+
+  def * : ProvenShape[MenuItem] = (id, name, date) <> (MenuItem.tupled, MenuItem.unapply)
 }
 
 class Products(tag: Tag) extends Table[Product](tag, "products") with WithIdColumn {
