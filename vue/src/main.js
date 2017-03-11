@@ -7,6 +7,7 @@ import CategoriesPage from "components/CategoriesPage";
 import PacksPage from "components/PacksPage";
 import ProductTypesPage from "components/product-types/ProductTypesPage";
 import ProductLogsPage from "components/ProductLogsPage";
+import MenuPage from "components/menu/MenuPage";
 import store from "store/store";
 import moment from "moment";
 
@@ -20,6 +21,7 @@ const routes = [
   {path: '/categories', component: CategoriesPage},
   {path: '/packs', component: PacksPage},
   {path: '/product-types', component: ProductTypesPage},
+  {path: '/menu', component: MenuPage},
 ];
 
 const router = new VueRouter({
