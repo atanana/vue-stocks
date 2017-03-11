@@ -21,8 +21,12 @@ describe('actions.js', () => {
     checkLoadedOnce('/api/packs/all', actions.loadPacks, 'setPacks', done);
   });
 
-  it('should load products types once', done => {
+  it('should load products types only once', done => {
     checkLoadedOnce('/api/product-types/all', actions.loadProductTypes, 'setProductTypes', done);
+  });
+
+  it('should load menu items only once', done => {
+    checkLoadedOnce('/api/menu/all', actions.loadMenuItems, 'setMenuItems', done);
   });
 
   it('should update categories', done => {
@@ -35,6 +39,10 @@ describe('actions.js', () => {
 
   it('should update product types', done => {
     checkUpdate('/api/product-types/update', actions.updateProductTypes, 'setProductTypes', done);
+  });
+
+  it('should update menu items', done => {
+    checkUpdate('/api/menu/update', actions.updateMenuItems, 'setMenuItems', done);
   });
 
   it('should add product', done => {

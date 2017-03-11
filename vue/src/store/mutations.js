@@ -17,3 +17,7 @@ export const setProductTypes = (state, productTypes) => {
 export const setProductLogs = (state, productLogs) => {
   state.productLogs = productLogs;
 };
+
+export const setMenuItems = (state, menuItems) => {
+  state.menuItems = menuItems;
+};

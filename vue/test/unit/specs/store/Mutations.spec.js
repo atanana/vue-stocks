@@ -21,6 +21,10 @@ describe('mutations.js', () => {
     checkSet('productLogs', mutations.setProductLogs);
   });
 
+  it('should set menu items', () => {
+    checkSet('menuItems', mutations.setMenuItems);
+  });
+
   function checkSet(property, method) {
     const state = {};
     const items = [

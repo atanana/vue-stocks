@@ -146,6 +146,23 @@ describe('getters.js', () => {
     }]);
   });
 
+  it('should map menu items', () => {
+    const date = new Date();
+    const store = {
+      menuItems: [{
+        id: '1',
+        name: 'test 1',
+        date: date
+      }]
+    };
+
+    expect(getters.menuItems(store)).to.eql([{
+      id: '1',
+      name: 'test 1',
+      date: moment(date)
+    }]);
+  });
+
   function checkSimpleGetter(property, method) {
     const items = [
       {id: 1, name: 'item 1'},

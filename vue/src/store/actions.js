@@ -10,55 +10,38 @@ const loadOnce = (func) => {
   }
 };
 
+const defaultLoad = (url, action) =>
+  loadOnce((commit) => {
+    axios.get(url)
+      .then(response => {
+        commit(action, response.data);
+      });
+  });
+
+const defaultUpdate = (url, action) =>
+  ({commit}, items) => {
+    axios.put(url, items)
+      .then(response => {
+        commit(action, response.data);
+      });
+  };
+
 export default {
-  loadProducts: loadOnce((commit) => {
-    axios.get('/api/products/all')
-      .then(response => {
-        commit('setProducts', response.data);
-      });
-  }),
-  loadCategories: loadOnce((commit) => {
-    axios.get('/api/categories/all')
-      .then(response => {
-        commit('setCategories', response.data);
-      });
-  }),
-  loadPacks: loadOnce((commit) => {
-    axios.get('/api/packs/all')
-      .then(response => {
-        commit('setPacks', response.data);
-      });
-  }),
-  loadProductTypes: loadOnce((commit) => {
-    axios.get('/api/product-types/all')
-      .then(response => {
-        commit('setProductTypes', response.data);
-      });
-  }),
+  loadProducts: defaultLoad('/api/products/all', 'setProducts'),
+  loadCategories: defaultLoad('/api/categories/all', 'setCategories'),
+  loadPacks: defaultLoad('/api/packs/all', 'setPacks'),
+  loadProductTypes: defaultLoad('/api/product-types/all', 'setProductTypes'),
+  loadMenuItems: defaultLoad('/api/menu/all', 'setMenuItems'),
   loadProductLogs({commit}) {
     axios.get('/api/product-logs/all')
       .then(response => {
         commit('setProductLogs', response.data);
       });
   },
-  updateCategories({commit}, categories) {
-    axios.put('/api/categories/update', categories)
-      .then(response => {
-        commit('setCategories', response.data);
-      });
-  },
-  updatePacks({commit}, packs){
-    axios.put('/api/packs/update', packs)
-      .then(response => {
-        commit('setPacks', response.data);
-      });
-  },
-  updateProductTypes({commit}, productTypes) {
-    axios.put('/api/product-types/update', productTypes)
-      .then(response => {
-        commit('setProductTypes', response.data);
-      });
-  },
+  updateCategories: defaultUpdate('/api/categories/update', 'setCategories'),
+  updatePacks: defaultUpdate('/api/packs/update', 'setPacks'),
+  updateProductTypes: defaultUpdate('/api/product-types/update', 'setProductTypes'),
+  updateMenuItems: defaultUpdate('/api/menu/update', 'setMenuItems'),
   addProduct({commit}, newProduct) {
     axios.post('/api/products/new', newProduct)
       .then(response => {
