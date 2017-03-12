@@ -6,7 +6,7 @@
       newItemLabel="Добавить блюдо"
       ref="items"
     />
-    <SaveButton ref="saveButton" @save="save(productTypes)"/>
+    <SaveButton ref="saveButton" @save="save(itemsData)"/>
   </div>
 </template>
 

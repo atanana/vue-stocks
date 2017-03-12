@@ -59,10 +59,3 @@ export const productLogs = (store, getters) => {
     time: moment(logEntry.time)
   }));
 };
-
-export const menuItems = store => {
-  return store.menuItems.map(item => {
-    item.date = moment(item.date);
-    return item;
-  });
-};

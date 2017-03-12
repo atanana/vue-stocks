@@ -17,7 +17,7 @@ object CustomColumns {
 
   val localDateColumn: JdbcType[LocalDate] with BaseTypedType[LocalDate] = MappedColumnType.base[LocalDate, Timestamp](
     localDate => new Timestamp(localDate.toDateTimeAtStartOfDay(DateTimeZone.UTC).getMillis),
-    timestamp => new DateTime(timestamp.getTime, DateTimeZone.UTC).toLocalDate
+    timestamp => new DateTime(timestamp.getTime).toLocalDate
   )
 }
 

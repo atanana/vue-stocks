@@ -27,7 +27,7 @@
     },
     methods: {
       addNewItem() {
-        this.items.push({date: new Date()});
+        this.items.push({date: moment().toDate().getTime()});
 
         this.$nextTick(() => {
           const inputs = this.$el.querySelectorAll('.simple-item input.stocks-menu-label');
