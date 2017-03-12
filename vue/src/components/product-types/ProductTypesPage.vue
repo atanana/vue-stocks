@@ -31,7 +31,7 @@
     },
     data() {
       return {
-        itemsData: []
+        itemsData: copyData(this.$store.state.productTypes)
       }
     },
     watch: {
