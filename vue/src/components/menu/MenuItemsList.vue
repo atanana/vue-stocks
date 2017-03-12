@@ -15,6 +15,7 @@
 
 <script>
   import Vue from 'vue';
+  import moment from 'moment';
   import MenuEntryItem from 'components/menu/MenuEntryItem';
   import AddNewButton from 'components/buttons/AddNewButton';
 
@@ -26,10 +27,10 @@
     },
     methods: {
       addNewItem() {
-        this.items.push({});
+        this.items.push({date: new Date()});
 
         this.$nextTick(() => {
-          const inputs = this.$el.querySelectorAll('.simple-item input');
+          const inputs = this.$el.querySelectorAll('.simple-item input.stocks-menu-label');
           inputs[inputs.length - 1].focus();
         });
       },
