@@ -1,7 +1,7 @@
 <template>
   <div>
     <ProductTypesList
-      :items="productTypes"
+      :items="itemsData"
       :categories="categories"
       newItemPlaceholder="Название типа продуктов"
       newItemLabel="Добавить тип продуктов"
@@ -12,9 +12,9 @@
 </template>
 
 <script>
-  import ProductTypesList from 'components/product-types/ProductTypesList'
-  import SaveButton from 'components/buttons/SaveButton'
-  import {copyData} from "utility/objectUtils";
+  import ProductTypesList from 'components/product-types/ProductTypesList';
+  import SaveButton from 'components/buttons/SaveButton';
+  import {copyData} from 'utility/objectUtils';
 
   export default {
     components: {
@@ -27,6 +27,11 @@
       },
       categories() {
         return this.$store.state.categories;
+      }
+    },
+    data() {
+      return {
+        itemsData: []
       }
     },
     watch: {
