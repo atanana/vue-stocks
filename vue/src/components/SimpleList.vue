@@ -3,7 +3,6 @@
     <slot
       name="item"
       v-for="item in items"
-      @deleteItem="deleteItem(item)"
       :item="item"
     />
 

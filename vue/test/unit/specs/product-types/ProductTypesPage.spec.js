@@ -37,6 +37,28 @@ describe('ProductTypesPage.vue', () => {
       {name: 'productType 2'},
       {name: 'productType 3'}
     ];
+    const vm = createPage(createStore({
+      state: {
+        productTypes,
+        categories: []
+      }
+    }));
+
+    const itemsList = vm.$refs.items;
+    expect(itemsList).to.exist;
+    expect(itemsList.items).to.eql(productTypes);
+    expect(itemsList.newItemLabel).to.eql('Добавить тип продуктов');
+
+    const saveButton = vm.$refs.saveButton;
+    expect(saveButton).to.exist;
+  });
+
+  it('should render correct items', () => {
+    const productTypes = [
+      {name: 'productType 1'},
+      {name: 'productType 2'},
+      {name: 'productType 3'}
+    ];
     const categories = [
       {name: 'category 1'},
       {name: 'category 2'},
@@ -49,15 +71,34 @@ describe('ProductTypesPage.vue', () => {
       }
     }));
 
-    const itemsList = vm.$refs.items;
-    expect(itemsList).to.exist;
-    expect(itemsList.items).to.eql(productTypes);
-    expect(itemsList.categories).to.eql(categories);
-    expect(itemsList.newItemLabel).to.eql('Добавить тип продуктов');
-    expect(itemsList.newItemPlaceholder).to.eql('Название типа продуктов');
+    const realItems = vm.$refs.items.$children;
+    for (let i = 0; i < productTypes.length; i++) {
+      checkItem(realItems[i], productTypes[i]);
+    }
 
-    const saveButton = vm.$refs.saveButton;
-    expect(saveButton).to.exist;
+    function checkItem(realItem, item) {
+      expect(realItem.item).to.eql(item);
+      expect(realItem.categories).to.eql(categories);
+      expect(realItem.$el).to.class('simple-item');
+    }
+  });
+
+  it('should call list to delete item', () => {
+    const productType = {name: 'productType 1'};
+    const vm = createPage(createStore({
+      state: {
+        productTypes: [productType],
+        categories: []
+      }
+    }));
+
+    const itemsList = vm.$refs.items;
+    sinon.spy(itemsList, 'deleteItem');
+
+    const realItem = itemsList.$children[0];
+    realItem.$refs.deleteButton.$emit('delete');
+
+    expect(itemsList.deleteItem).to.calledWith(productType);
   });
 
   it('should copy data for list', () => {

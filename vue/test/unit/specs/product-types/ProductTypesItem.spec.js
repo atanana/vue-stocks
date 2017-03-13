@@ -11,13 +11,11 @@ describe('ProductTypesItem.vue', () => {
 
   it('should render correct contents', () => {
     const itemName = 'test name';
-    const itemPlaceholder = 'test placeholder';
     const vm = createItem({
       item: {
         name: itemName,
         categoryId: 2
       },
-      placeholder: itemPlaceholder,
       categories: [
         {id: 1, name: 'test category 1'},
         {id: 2, name: 'test category 2'},
@@ -31,7 +29,7 @@ describe('ProductTypesItem.vue', () => {
     const input = item.querySelector('input.input');
     expect(input).to.exist;
     expect(input.value).to.equal(itemName);
-    expect(input.getAttribute('placeholder')).to.equal(itemPlaceholder);
+    expect(input.getAttribute('placeholder')).to.equal('Название типа продуктов');
 
     const selectContainer = item.querySelector('.select');
     expect(selectContainer).to.exist;
