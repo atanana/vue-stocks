@@ -1,12 +1,10 @@
 <template>
   <div>
-    <SimpleItem
+    <slot
+      name="item"
       v-for="item in items"
-      :item="item"
-      :placeholder="newItemPlaceholder"
-      class="simple-item"
       @deleteItem="deleteItem(item)"
-      ref="items"
+      :item="item"
     />
 
     <AddNewButton ref="addNew" :label="newItemLabel" @addNew="addNewItem"/>
@@ -15,13 +13,11 @@
 
 <script>
   import Vue from 'vue';
-  import SimpleItem from 'components/SimpleItem';
   import AddNewButton from 'components/buttons/AddNewButton';
 
   export default {
-    props: ['items', 'newItemPlaceholder', 'newItemLabel'],
+    props: ['items', 'newItemLabel'],
     components: {
-      SimpleItem,
       AddNewButton
     },
     methods: {
@@ -29,7 +25,7 @@
         this.items.push({});
 
         this.$nextTick(() => {
-          const inputs = this.$el.querySelectorAll('.simple-item input');
+          const inputs = this.$el.querySelectorAll('.simple-item > input');
           inputs[inputs.length - 1].focus();
         });
       },
@@ -39,9 +35,3 @@
     }
   }
 </script>
-
-<style>
-  .simple-item {
-    margin-bottom: 1em;
-  }
-</style>

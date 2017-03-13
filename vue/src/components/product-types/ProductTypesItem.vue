@@ -1,7 +1,7 @@
 <template>
   <div class="simple-item">
     <!--suppress HtmlFormInputWithoutLabel -->
-    <input type="text" class="input" :placeholder="placeholder" v-model="item.name">
+    <input type="text" class="input" placeholder="Название типа продуктов" v-model="item.name">
     <span class="select">
       <!--suppress HtmlFormInputWithoutLabel -->
       <select v-model="item.categoryId" class="category-select">
@@ -20,7 +20,7 @@
   import DeleteButton from 'components/buttons/DeleteButton'
 
   export default {
-    props: ['item', 'categories', 'placeholder'],
+    props: ['item', 'categories'],
     components: {
       DeleteButton
     },

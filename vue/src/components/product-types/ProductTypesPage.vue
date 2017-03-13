@@ -1,25 +1,34 @@
 <template>
   <div>
-    <ProductTypesList
+    <SimpleList
       :items="itemsData"
-      :categories="categories"
-      newItemPlaceholder="Название типа продуктов"
       newItemLabel="Добавить тип продуктов"
       ref="items"
-    />
+    >
+      <template slot="item" scope="props">
+        <ProductTypesItem
+          :item="props.item"
+          :categories="categories"
+          class="simple-item"
+          @deleteItem="$refs.items.deleteItem(props.item)"
+        />
+      </template>
+    </SimpleList>
     <SaveButton ref="saveButton" @save="save(itemsData)"/>
   </div>
 </template>
 
 <script>
-  import ProductTypesList from 'components/product-types/ProductTypesList';
+  import SimpleList from 'components/SimpleList';
   import SaveButton from 'components/buttons/SaveButton';
   import {copyData} from 'utility/objectUtils';
+  import ProductTypesItem from 'components/product-types/ProductTypesItem';
 
   export default {
     components: {
-      ProductTypesList,
-      SaveButton
+      SimpleList,
+      SaveButton,
+      ProductTypesItem
     },
     computed: {
       productTypes() {

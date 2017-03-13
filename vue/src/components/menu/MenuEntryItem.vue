@@ -1,7 +1,7 @@
 <template>
   <div class="simple-item">
     <!--suppress HtmlFormInputWithoutLabel -->
-    <input type="text" class="input" :placeholder="placeholder" v-model="item.name">
+    <input type="text" class="input" placeholder="Название блюда" v-model="item.name">
     <datepicker :value="date" input-class="input" :monday-first="true" language="ru"
                 @selected="updateDate"/>
     <DeleteButton ref="deleteButton" class="delete-button" @delete="$emit('deleteItem')"/>
@@ -14,7 +14,7 @@
   import moment from 'moment';
 
   export default {
-    props: ['item', 'placeholder'],
+    props: ['item'],
     components: {
       DeleteButton,
       Datepicker
@@ -39,5 +39,9 @@
 
   .simple-item {
     display: flex;
+  }
+
+  .datepicker {
+    margin-left: 1em;
   }
 </style>
