@@ -30,7 +30,7 @@
         this.items.push({date: moment().toDate().getTime()});
 
         this.$nextTick(() => {
-          const inputs = this.$el.querySelectorAll('.simple-item input.stocks-menu-label');
+          const inputs = this.$el.querySelectorAll('.simple-item > input');
           inputs[inputs.length - 1].focus();
         });
       },

@@ -1,7 +1,7 @@
 <template>
   <div class="simple-item">
     <!--suppress HtmlFormInputWithoutLabel -->
-    <input type="text" class="input stocks-menu-label" :placeholder="placeholder" v-model="item.name">
+    <input type="text" class="input" :placeholder="placeholder" v-model="item.name">
     <datepicker :value="date" input-class="input" :monday-first="true" language="ru"
                 @selected="updateDate"/>
     <DeleteButton ref="deleteButton" class="delete-button" @delete="$emit('deleteItem')"/>
