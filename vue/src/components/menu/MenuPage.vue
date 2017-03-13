@@ -36,7 +36,7 @@
     },
     data() {
       return {
-        itemsData: []
+        itemsData: copyData(this.$store.state.menuItems)
       }
     },
     watch: {
