@@ -4,7 +4,9 @@
       name="item"
       v-for="item in items"
       :item="item"
-    />
+    >
+      {{item.name}}
+    </slot>
 
     <AddNewButton ref="addNew" :label="newItemLabel" @addNew="addNewItem"/>
   </div>
@@ -25,7 +27,9 @@
 
         this.$nextTick(() => {
           const inputs = this.$el.querySelectorAll('.simple-item > input');
-          inputs[inputs.length - 1].focus();
+          if (inputs.length) {
+            inputs[inputs.length - 1].focus();
+          }
         });
       },
       deleteItem(item) {
