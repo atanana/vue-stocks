@@ -27,7 +27,7 @@
     },
     methods: {
       updateDate(newDate) {
-        this.item.date = moment(newDate).unix();
+        this.item.date = newDate.getTime();
       }
     },
     computed: {
