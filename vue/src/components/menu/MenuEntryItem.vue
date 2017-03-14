@@ -2,8 +2,14 @@
   <div class="simple-item">
     <!--suppress HtmlFormInputWithoutLabel -->
     <input type="text" class="input" placeholder="Название блюда" v-model="item.name">
-    <datepicker :value="date" input-class="input" :monday-first="true" language="ru"
-                @selected="updateDate"/>
+    <datepicker
+      :value="date"
+      input-class="input"
+      :monday-first="true"
+      language="ru"
+      @selected="updateDate"
+      ref="datePicker"
+    />
     <DeleteButton ref="deleteButton" class="delete-button" @delete="$emit('deleteItem')"/>
   </div>
 </template>
