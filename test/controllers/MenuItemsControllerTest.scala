@@ -2,7 +2,7 @@ package controllers
 
 import controllers.AuthorizationUtility.authorizedRequest
 import models.db.MenuItem
-import org.joda.time.{DateTimeZone, LocalDate}
+import org.joda.time.LocalDate
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.{BeforeAndAfter, Matchers, WordSpecLike}
 import play.api.libs.json.{JsObject, JsValue, Json}
@@ -109,7 +109,7 @@ class MenuItemsControllerTest extends WordSpecLike with MockFactory with BeforeA
   private def newMenuItemJson(name: String, date: LocalDate): JsObject = {
     Json.obj(
       "name" -> name,
-      "date" -> date.toDateTimeAtStartOfDay(DateTimeZone.UTC).getMillis
+      "date" -> date.toString("dd-MM-yyyy")
     )
   }
 
@@ -117,7 +117,7 @@ class MenuItemsControllerTest extends WordSpecLike with MockFactory with BeforeA
     Json.obj(
       "id" -> menuItem.id,
       "name" -> menuItem.name,
-      "date" -> menuItem.date.toDateTimeAtStartOfDay(DateTimeZone.UTC).getMillis
+      "date" -> menuItem.date.toString("dd-MM-yyyy")
     )
   }
 }

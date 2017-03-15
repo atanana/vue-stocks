@@ -2,8 +2,10 @@ package controllers
 
 import javax.inject.Inject
 
+import controllers.MenuItemsController.dateFormat
 import models.db.{MenuItem, MenuItems}
-import org.joda.time.{DateTime, DateTimeZone, LocalDate}
+import org.joda.time.LocalDate
+import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 import play.api.libs.functional.syntax.{unlift, _}
 import play.api.libs.json._
 import services.db.{ClientMenuItem, MenuItemsDao}
@@ -14,13 +16,13 @@ class MenuItemsController @Inject()(val authorizedAction: AuthorizedAction, menu
   extends SimpleItemsHelper[ClientMenuItem, MenuItem, MenuItems](menuDao) {
 
   private implicit val localDateReads: Reads[LocalDate] = Reads.apply(json =>
-    json.asOpt[JsNumber]
-      .map(_.value.longValue())
-      .map(new DateTime(_, DateTimeZone.UTC).toLocalDate)
+    json.asOpt[JsString]
+      .map(_.value)
+      .map(LocalDate.parse(_, dateFormat))
       .map(JsSuccess(_))
       .getOrElse(JsError())
   )
-  private implicit val localDateWrites: Writes[LocalDate] = Writes.apply(localDate => JsNumber(localDate.toDateTimeAtStartOfDay(DateTimeZone.UTC).getMillis))
+  private implicit val localDateWrites: Writes[LocalDate] = Writes.apply(localDate => JsString(localDate.toString(dateFormat)))
 
   protected implicit val itemReads: Reads[ClientMenuItem] = (
     (JsPath \ "id").readNullable[Int] and
@@ -35,4 +37,8 @@ class MenuItemsController @Inject()(val authorizedAction: AuthorizedAction, menu
     ) (unlift(MenuItem.unapply))
 
   override protected def updateItem(item: ClientMenuItem, id: Int): Future[Int] = menuDao.updateMenuItem(item, id)
+}
+
+object MenuItemsController {
+  val dateFormat: DateTimeFormatter = DateTimeFormat.forPattern("dd-MM-yyyy")
 }

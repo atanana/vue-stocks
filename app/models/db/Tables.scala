@@ -1,6 +1,6 @@
 package models.db
 
-import java.sql.Timestamp
+import java.sql.{Date, Timestamp}
 
 import models.db.ProductLogAction.ProductLogAction
 import org.joda.time.{DateTime, DateTimeZone, LocalDate}
@@ -15,9 +15,9 @@ object CustomColumns {
     timestamp => new DateTime(timestamp.getTime, DateTimeZone.UTC)
   )
 
-  val localDateColumn: JdbcType[LocalDate] with BaseTypedType[LocalDate] = MappedColumnType.base[LocalDate, Timestamp](
-    localDate => new Timestamp(localDate.toDateTimeAtStartOfDay(DateTimeZone.UTC).getMillis),
-    timestamp => new DateTime(timestamp.getTime).toLocalDate
+  val localDateColumn: JdbcType[LocalDate] with BaseTypedType[LocalDate] = MappedColumnType.base[LocalDate, Date](
+    localDate => new Date(localDate.toDateTimeAtStartOfDay.getMillis),
+    date => new DateTime(date.getTime).toLocalDate
   )
 }
 

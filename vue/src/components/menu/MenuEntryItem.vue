@@ -27,12 +27,12 @@
     },
     methods: {
       updateDate(newDate) {
-        this.item.date = newDate.getTime();
+        this.item.date = moment(newDate).format('DD-MM-YYYY');
       }
     },
     computed: {
       date() {
-        return moment(this.item.date).toDate();
+        return moment(this.item.date, 'DD-MM-YYYY').toDate();
       }
     }
   }
