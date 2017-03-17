@@ -1,33 +1,19 @@
 <template>
   <div>
-    <SimpleList
-      :items="itemsData"
-      newItemLabel="Добавить блюдо"
-      ref="items"
-    >
-      <template slot="item" scope="props">
-        <MenuEntryItem
-          :item="props.item"
-          class="simple-item"
-          @deleteItem="$refs.items.deleteItem(props.item)"
-        />
-      </template>
-    </SimpleList>
+    <MenuList :items="itemsData" ref="items"/>
     <SaveButton ref="saveButton" @save="save(itemsData)"/>
   </div>
 </template>
 
 <script>
-  import SimpleList from 'components/SimpleList';
   import SaveButton from 'components/buttons/SaveButton';
   import {copyData} from 'utility/objectUtils';
-  import MenuEntryItem from 'components/menu/MenuEntryItem';
+  import MenuList from 'components/menu/MenuList';
 
   export default {
     components: {
-      SimpleList,
-      SaveButton,
-      MenuEntryItem
+      MenuList,
+      SaveButton
     },
     computed: {
       menuItems() {

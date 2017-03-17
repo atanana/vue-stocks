@@ -44,7 +44,6 @@ describe('MenuPage.vue', () => {
     const itemsList = vm.$refs.items;
     expect(itemsList).to.exist;
     expect(itemsList.items).to.eql(menuItems);
-    expect(itemsList.newItemLabel).to.eql('Добавить блюдо');
 
     const saveButton = vm.$refs.saveButton;
     expect(saveButton).to.exist;
