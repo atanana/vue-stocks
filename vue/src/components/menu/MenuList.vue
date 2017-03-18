@@ -16,6 +16,7 @@
     <MenuEntryItem
       v-for="item in sortedItems"
       :item="item"
+      :key="item.id"
       class="simple-item"
       @deleteItem="deleteItem(item)"
       ref="items"
