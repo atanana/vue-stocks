@@ -10,6 +10,7 @@
     <tbody>
       <ProductItem
         v-for="product in products"
+        :key="product.id"
         :product="product"
         :packTypes="packs"
         ref="items"
