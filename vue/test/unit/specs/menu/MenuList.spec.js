@@ -99,9 +99,9 @@ describe('MenuList.vue', () => {
 
   it('should sort by date', done => {
     const items = [
-      {name: 'test 1', date: '01-01-2017'},
-      {name: 'test 2', date: '01-02-2017'},
-      {name: 'test 3', date: '01-03-2017'}
+      {name: 'test 1', date: '01-01-2017', id: 1},
+      {name: 'test 2', date: '01-02-2017', id: 2},
+      {name: 'test 3', date: '01-03-2017', id: 3}
     ];
     const vm = createList({
       items: items
@@ -121,9 +121,9 @@ describe('MenuList.vue', () => {
 
   it('should sort by name', done => {
     const items = [
-      {name: 'test 1', date: '01-01-2017'},
-      {name: 'test 2', date: '01-02-2017'},
-      {name: 'test 3', date: '01-03-2017'}
+      {name: 'test 1', date: '01-01-2017', id: 1},
+      {name: 'test 2', date: '01-02-2017', id: 2},
+      {name: 'test 3', date: '01-03-2017', id: 3}
     ];
     const vm = createList({
       items: items
